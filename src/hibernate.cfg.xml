@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.password">gugamida1</property>
+        <property name="hibernate.connection.url">jdbc:mysql://127.0.0.1:3306/canarywhey</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+    	
+    	 <property name="hibernate.show_sql">true</property>
+    	 
+    	 <mapping class="modelo.Usuarios" package="modelo" resource="/modelo.Usuarios.hbm.xml"/>
+    	 <mapping class="modelo.Categorias" package="modelo" resource="/modelo.Categorias.hbm.xml"/>
+    	 <mapping class="modelo.Pedidos" package="modelo" resource="/modelo.Pedidos.hbm.xml"/>
+    	 <mapping class="modelo.Productos" package="modelo" resource="/modelo.Productos.hbm.xml"/>
+    	 <mapping class="modelo.ProductosPedido" package="modelo" resource="/modelo.ProductosPedido.hbm.xml"/>
+    	 
+    	
+    </session-factory>
+</hibernate-configuration>

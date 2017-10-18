@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generated 13-oct-2017 14:16:47 by Hibernate Tools 5.2.5.Final --><!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="true" default-access="property" default-cascade="none" default-lazy="true">
+    <class catalog="canarywhey" dynamic-insert="false" dynamic-update="false" mutable="true" name="modelo.Pedidos" optimistic-lock="version" polymorphism="implicit" select-before-update="false" table="pedidos">
+        <id name="codigoPedido" type="java.lang.Integer">
+            <column name="codigo_pedido"/>
+            <generator class="identity"/>
+        </id>
+        <property generated="never" lazy="false" name="nombreUsuario" optimistic-lock="true" type="int" unique="false">
+            <column name="nombre_usuario" not-null="true"/>
+        </property>
+        <property generated="never" lazy="false" name="fechaPedido" optimistic-lock="true" type="date" unique="false">
+            <column length="10" name="fecha_pedido" not-null="true"/>
+        </property>
+        <property generated="never" lazy="false" name="horaPedido" optimistic-lock="true" type="time" unique="false">
+            <column length="8" name="hora_pedido" not-null="true"/>
+        </property>
+    </class>
+</hibernate-mapping>
