@@ -58,8 +58,7 @@
 		</nav>
 	</header>
 
-	<br />
-	<br />
+	
 
 	<div id="table" class="table-editable">
 		<form action="Servlet?action=Cuenta" method="post">
