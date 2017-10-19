@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -55,6 +54,11 @@ public class Servlet extends HttpServlet {
 		String base = "/jsp/";
 		String url = base + "bienvenida.jsp";
 		String action = request.getParameter("action");
+		HttpSession atrsesion = request.getSession();
+
+		if (atrsesion.getAttribute("nombreDeUsuario") != null) {
+			url = base + "bienvenidaLogueado.jsp";
+		}
 
 		if (action != null) {
 			switch (action) {
@@ -104,6 +108,13 @@ public class Servlet extends HttpServlet {
 
 			case "Productos":
 				url = base + "productos.jsp";
+				break;
+
+			case "seleccionCategoria":
+				url = base + "productos.jsp";
+				break;
+			case "seleccionProductos":
+				url = base + "seleccionProducto.jsp";
 				break;
 			}
 		}
@@ -157,8 +168,6 @@ public class Servlet extends HttpServlet {
 		atrsesion.invalidate();
 
 	}
-	
-	
 
 	public void modificarUsuarios(HttpServletRequest request) {
 
@@ -167,7 +176,7 @@ public class Servlet extends HttpServlet {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 
 		Usuarios usuario = (Usuarios) session.get(Usuarios.class, user);
-		
+
 		usuario.setNombre(request.getParameter("nombre"));
 		usuario.setApellidos(request.getParameter("apellidos"));
 		usuario.setContraseña(request.getParameter("contraseña"));
