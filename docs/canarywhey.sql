@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 18-10-2017 a las 12:44:48
+-- Tiempo de generación: 24-10-2017 a las 13:25:08
 -- Versión del servidor: 10.1.21-MariaDB
 -- Versión de PHP: 5.6.31
 
@@ -40,7 +40,7 @@ CREATE TABLE `categorias` (
 INSERT INTO `categorias` (`codigo_categoria`, `nombre`) VALUES
 (1, 'Proteinas'),
 (2, 'Gainers'),
-(3, 'Aminoácidos');
+(3, 'Aminoacidos');
 
 -- --------------------------------------------------------
 
@@ -68,6 +68,16 @@ CREATE TABLE `productos` (
   `precio` int(255) NOT NULL,
   `stock` int(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `productos`
+--
+
+INSERT INTO `productos` (`codigo_producto`, `nombre`, `codigo_categoria`, `precio`, `stock`) VALUES
+(1, 'Syntha-6', 1, 50, 25),
+(2, 'Mutant Mass', 2, 65, 30),
+(3, 'BCAA´S', 3, 20, 50),
+(4, 'Isopro', 1, 65, 25);
 
 -- --------------------------------------------------------
 
@@ -103,6 +113,7 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`rol`, `nombre`, `apellidos`, `nombre_usuario`, `contraseña`, `email`, `fecha_nacimiento`, `foto`) VALUES
+('Administrador', 'juan', 'hernadez', 'juanadmin', '123', 'juan@gmail.com', '1995-12-03', NULL),
 ('Cliente', 'Juan José', 'Hernandez Hernandez', 'juanjohdez', '123', 'juanjo@gmail.com', '1996-12-03', NULL);
 
 --
@@ -161,7 +172,7 @@ ALTER TABLE `pedidos`
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `codigo_producto` int(255) NOT NULL AUTO_INCREMENT;
+  MODIFY `codigo_producto` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `productos_pedido`
