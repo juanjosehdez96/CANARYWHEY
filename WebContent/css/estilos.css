@@ -1,3 +1,103 @@
+#añadirProductos{
+
+    margin-top: 7%;
+    float: left;
+    margin-left: 18%;
+    position: absolute;
+
+	
+}
+
+
+#imagenCarro{
+	
+	width: 150%;
+	
+}
+
+html
+{
+    position: relative; 
+    min-height: 100%;
+}
+body
+{
+    margin: 0 0 65px;
+}
+
+
+.table>tbody>tr>td, .table>tfoot>tr>td{
+    vertical-align: middle;
+   
+}
+@media screen and (max-width: 600px) {
+    table#cart tbody td .form-control{
+		width:20%;
+		display: inline !important;
+	}
+	.actions .btn{
+		width:36%;
+		margin:1.5em 0;
+	}
+	
+	.actions .btn-info{
+		float:left;
+	}
+	.actions .btn-danger{
+		float:right;
+	}
+	
+	table#cart thead { display: none; }
+	table#cart tbody td { display: block; padding: .6rem; min-width:320px;}
+	table#cart tbody tr td:first-child { background: #333; color: #fff; }
+	table#cart tbody td:before {
+		content: attr(data-th); font-weight: bold;
+		display: inline-block; width: 8rem;
+	}
+	
+	
+	
+	table#cart tfoot td{display:block; }
+	table#cart tfoot td .btn{display:block;}
+	
+}
+
+#cart {
+	padding-top: 5%;
+	
+}
+
+
+
+/* Creates a vertical nav starting at 768px (sm) */
+@media ( min-width : 768px) {
+	.bootstrap-vertical-nav .collapse {
+		display: block;
+	}
+}
+
+@media ( min-width : 768px) {
+	.bootstrap-vertical-nav {
+		margin-top: 100px;
+	}
+}
+
+div h4 {
+	margin-left: 15%;
+	margin-top: 6%;
+}
+
+.container table {
+	
+	margin-top: 6.5%;
+}
+
+#carrito {
+	padding-top: 10%;
+	float: left;
+	margin-left: 5%;
+}
+
 #container {
 	padding-top: 10%;
 	width: 60%;
@@ -38,50 +138,84 @@
 
 #precio strong {
 	font-size: 25px;
-	
 }
 
 #muestraProductos {
-	margin-left: 20%;
+	margin-left: 18%;
 	margin-top: 100px;
-	text-align: center;
 	float: left;
+	display: block;
 }
 
 #muestraProductos h2 {
-	margin-bottom: 10%;
+	margin-bottom: 3%;
+	margin-left: 35%;
+	text-align: center;
+	box-shadow: 0px 0px 15px 3px #999999;
+	/*margin: auto;*/
+	width: 250px;
+	font-family: serif;
+}
+
+.productos img {
+	width: 100%;
+}
+
+.productos {
+	border: 1px solid gray;
+	width: 20%;
+	float: left;
+	margin: 2%;
+	border-radius: 5%;
+	box-shadow: 0px 0px 10px 8px #999999;
+}
+
+.productos div {
+	font-size: 20px;
+	font-weight: bold;
+	text-align: center;
+	width: 100%;
+}
+
+.productos:hover {
+	width: 22%;
 }
 
 #barraizquierda {
-	
-	overflow:hidden;
+	overflow: hidden;
 	position: fixed;
 	background-color: gray;
 	float: left;
 	margin-top: 4%;
 	width: 15%;
 	height: 84%;
+
+
 }
 
 #barraizquierda ul {
 	list-style: none;
 }
 
+#barraizquierda h2 {
+	padding-top: 30%;
+	margin-bottom: 20%;
+	
+}
+
 #barraizquierda h2 a {
-	margin-left: 14%;
 	color: white;
-	padding-top: 25%;
-	margin-bottom: 25%;
+
 }
 
 #barraizquierda a {
 	text-decoration: none;
 	font-weight: bold;
-	font-size: 20px;
-	float: left;
-	height: 3em;
+	font-size: 21px;
+	height: 40px;
 	color: rgba(0, 0, 0, .5);
 	width: 100%;
+	font-family: inherit;
 }
 
 #barraizquierda li a:hover {
@@ -89,8 +223,33 @@
 }
 
 #table {
-	width: 99%;
+	width: 65%;
 	padding-top: 5%;
+	border-right: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	float: left;
+}
+
+#table td, th {
+	border-bottom: 1px solid #ddd;
+}
+
+.btn-primary {
+	padding-bottom: 5px;
+}
+
+
+#imagenUsuario img {
+	width: 15%;
+	height: 15%;
+	float: left;
+	margin-left: 10%;
+	margin-top: 13%;
+}
+
+#examinar {
+	margin-top: 2%;
+	margin-left: 3%;
 }
 
 /*----Slider-----*/
@@ -98,16 +257,21 @@
 	width: 100%;
 	margin: auto;
 	margin-top: 4%;
+	margin-bottom: 3%;
 }
 
+
 /*-----Pie de Pagina----*/
-#footer {
-	position: fixed;
-	bottom: 0;
-	width: 100%;
-	height: 50px;
-	background-color: #2C3E50;
-	padding-top: 10px;
+
+
+footer
+{	
+	padding-top:1%;
+    width: 100%;
+    bottom: 0;
+    position: absolute;
+    height: 50px;
+    background-color: #2C3E50;
 }
 
 .footertext {

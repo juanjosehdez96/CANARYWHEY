@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
-<%@page import="modelo.Usuarios, modelo.HibernateUtil, org.hibernate.Session"%>
+<%@page
+	import="modelo.Usuarios, modelo.HibernateUtil, org.hibernate.Session"%>
 <head>
 
 <title>CANARYWHEY</title>
@@ -18,15 +19,16 @@
 <body>
 
 
-<%
-HttpSession atrsesion = request.getSession();
-String user = (String) atrsesion.getAttribute("nombreDeUsuario");
-%>
+	<%
+		HttpSession atrsesion = request.getSession();
+		String user = (String) atrsesion.getAttribute("nombreDeUsuario");
+	%>
 	<header>
 		<!-- Navigation -->
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
 			<div class="container">
-				<a class="navbar-brand" href="/CANARYWHEY/Servlet?action=InicioSesion">BIENVENIDO: <%=user.toUpperCase() %></a>
+				<a class="navbar-brand"
+					href="/CANARYWHEY/Servlet?action=InicioSesion">BIENVENIDO: <%=user.toUpperCase()%></a>
 				<a href="/CANARYWHEY/Servlet?action=Inicio">Cerrar sesion</a>
 				<button class="navbar-toggler" type="button" data-toggle="collapse"
 					data-target="#navbarResponsive" aria-controls="navbarResponsive"
@@ -35,13 +37,16 @@ String user = (String) atrsesion.getAttribute("nombreDeUsuario");
 				</button>
 				<div class="collapse navbar-collapse" id="navbarResponsive">
 					<ul class="navbar-nav ml-auto">
-						<li class="nav-item active"><a class="nav-link" href="/CANARYWHEY/Servlet?action=InicioSesion">Inicio
-								<span class="sr-only">(current)</span>
+						<li class="nav-item active"><a class="nav-link"
+							href="/CANARYWHEY/Servlet?action=InicioSesion">Inicio <span
+								class="sr-only">(current)</span>
 						</a></li>
-						<li class="nav-item"><a class="nav-link" href="/CANARYWHEY/Servlet?action=Cuenta">Mi cuenta</a></li>
 						<li class="nav-item"><a class="nav-link"
-							href="/CANARYWHEY/Servlet?action=Productos">Productos</a><li class="nav-item"><a class="nav-link" href="#">Mis Pedidos</a>
-						</li>
+							href="/CANARYWHEY/Servlet?action=Cuenta">Mi cuenta</a></li>
+						<li class="nav-item"><a class="nav-link"
+							href="/CANARYWHEY/Servlet?action=Productos">Productos</a></li>
+						<li class="nav-item"><a class="nav-link"
+							href="/CANARYWHEY/Servlet?action=misPedidos">Mis Pedidos</a></li>
 					</ul>
 				</div>
 			</div>

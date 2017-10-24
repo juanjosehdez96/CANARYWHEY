@@ -43,22 +43,22 @@
 				<div class="collapse navbar-collapse" id="navbarResponsive">
 					<ul class="navbar-nav ml-auto">
 						<li class="nav-item"><a class="nav-link"
-							href="/CANARYWHEY/Servlet?action=InicioSesion">Inicio</a></li>
+							href="/CANARYWHEY/Servlet">Inicio</a></li>
 						<li class="nav-item active"><a class="nav-link"
 							href="/CANARYWHEY/Servlet?action=Cuenta">Mi cuenta <span
 								class="sr-only">(current)</span>
 						</a></li>
 						<li class="nav-item"><a class="nav-link"
-							href="/CANARYWHEY/Servlet?action=Productos">Productos</a>
-						<li class="nav-item"><a class="nav-link" href="#">Mis
-								Pedidos</a></li>
+							href="/CANARYWHEY/Servlet?action=Productos">Productos</a></li>
+						<li class="nav-item"><a class="nav-link"
+							href="/CANARYWHEY/Servlet?action=misPedidos">Mis Pedidos</a></li>
 					</ul>
 				</div>
 			</div>
 		</nav>
 	</header>
 
-	
+
 
 	<div id="table" class="table-editable">
 		<form action="Servlet?action=Cuenta" method="post">
@@ -119,11 +119,14 @@
 			<button style="margin-left: 30%" name="borrarCuenta"
 				class="btn btn-primary">Eliminar Cuenta</button>
 
+
 		</form>
 	</div>
-	<br />
-	<br />
-	<br />
+
+	<div id="imagenUsuario">
+		<img src="imgsUsuarios/0.jpg" />
+	</div>
+
 
 
 

@@ -46,9 +46,9 @@
 								class="sr-only">(current)</span>
 						</a></li>
 						<li class="nav-item"><a class="nav-link"
-							href="/CANARYWHEY/Servlet?action=Productos">Productos</a>
-						<li class="nav-item"><a class="nav-link" href="#">Mis
-								Pedidos</a></li>
+							href="/CANARYWHEY/Servlet?action=Productos">Productos</a></li>
+						<li class="nav-item"><a class="nav-link"
+							href="/CANARYWHEY/Servlet?action=misPedidos">Mis Pedidos</a></li>
 					</ul>
 				</div>
 			</div>
@@ -57,7 +57,7 @@
 
 
 	<div id="table" class="table-editable">
-		<form action="Servlet?action=modificarCuenta" method="post">
+		<form action="Servlet?action=modificarCuenta" method="post" >
 
 			<span class="table-add glyphicon glyphicon-plus"></span>
 			<table class="table">
@@ -120,9 +120,14 @@
 
 		</form>
 	</div>
-	<br />
-	<br />
-	<br />
+
+
+	<div id="imagenUsuario">
+		<img src="imgsUsuarios/0.jpg" />
+	</div>
+
+	<input type="file" name="examinar" id="examinar" />
+
 
 	<footer>
 		<div id="footer">

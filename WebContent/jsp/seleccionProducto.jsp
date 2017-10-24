@@ -24,17 +24,35 @@
 		String user = (String) atrsesion.getAttribute("nombreDeUsuario");
 
 		Session datos = HibernateUtil.getSessionFactory().openSession();
-		Usuarios usuario = (Usuarios) datos.get(Usuarios.class, user);
+		
 
 		String idCategoria = request.getParameter("id");
 
 		String imageURL = "imgsProductos/";
+		
+		if (user != null) {
+
+			Usuarios usuario = (Usuarios) datos.get(Usuarios.class, user);
 	%>
 
-	<header> <!-- Navigation --> <nav
+	<header>
+	
+	<script>
+	$(document).ready(function () {
+		
+		var boton = document.getElementById("btnCarrito");
+		boton.style.display="block";
+		
+	});
+		
+	</script>
+	
+	
+	 <!-- Navigation --> 
+	 <nav
 		class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
 	<div class="container">
-		<a class="navbar-brand" href="/CANARYWHEY/Servlet?action=InicioSesion">BIENVENIDO:
+		<a class="navbar-brand" href="/CANARYWHEY/Servlet">BIENVENIDO:
 			<%=user.toUpperCase()%></a> <a href="/CANARYWHEY/Servlet?action=Inicio">Cerrar
 			sesion</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -45,18 +63,50 @@
 		<div class="collapse navbar-collapse" id="navbarResponsive">
 			<ul class="navbar-nav ml-auto">
 				<li class="nav-item"><a class="nav-link"
-					href="/CANARYWHEY/Servlet?action=InicioSesion">Inicio</a></li>
+					href="/CANARYWHEY/Servlet">Inicio</a></li>
 				<li class="nav-item"><a class="nav-link"
 					href="/CANARYWHEY/Servlet?action=Cuenta">Mi cuenta </a></li>
 				<li class="nav-item active"><a class="nav-link"
 					href="/CANARYWHEY/Servlet?action=Productos">Productos<span
-						class="sr-only">(current)</span></a>
-				<li class="nav-item"><a class="nav-link" href="#">Mis
-						Pedidos</a></li>
+						class="sr-only">(current)</span></a></li>
+				<li class="nav-item"><a class="nav-link"
+					href="/CANARYWHEY/Servlet?action=misPedidos">Mis Pedidos</a></li>
 			</ul>
 		</div>
 	</div>
 	</nav> </header>
+	<%
+		} else {
+	%>
+	<header> <!-- Navigation --> <nav
+		class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+	<div class="container">
+		<a class="navbar-brand" href="/CANARYWHEY/Servlet">BIENVENIDO
+		</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#navbarResponsive" aria-controls="navbarResponsive"
+			aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarResponsive">
+			<ul class="navbar-nav ml-auto">
+				<li class="nav-item"><a class="nav-link"
+					href="/CANARYWHEY/Servlet">Inicio</a></li>
+						<li class="nav-item"><a class="nav-link"
+					href="/CANARYWHEY/Servlet?action=Acceder">Acceder</a></li>
+				<li class="nav-item active"><a class="nav-link"
+					href="/CANARYWHEY/Servlet?action=Productos">Productos<span
+						class="sr-only">(current)</span></a></li>
+			</ul>
+		</div>
+	</div>
+	</nav> </header>
+	
+	
+	<%
+		}
+	%>
+	
 
 	<!-- Sidebar -->
 	<div id="barraizquierda">
@@ -98,7 +148,7 @@
 			<div>
 				<p>
 					Stock:
-					<%=producto.getStock()%>Unidades
+					<%=producto.getStock()%>&nbsp;Unidades
 				</p>
 			</div>
 			<div>
@@ -108,8 +158,9 @@
 				</p>
 			</div>
 			<div>
-				<a href="/CANARYWHEY/Servlet?action=añadirCarro&proId=" + idProducto>
-					Añadir al carro</a>
+				<button  style="display: none" class="btn btn-primary" id="btnCarrito"
+					onclick="window.location.href='/CANARYWHEY/Servlet?action=Pedidos&proId=<%=idProducto%>'">Añadir
+					al carro</button>
 			</div>
 		</div>
 	</div>

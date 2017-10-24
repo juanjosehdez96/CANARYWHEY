@@ -2,7 +2,6 @@ package modelo;
 // Generated 13-oct-2017 14:16:47 by Hibernate Tools 5.2.5.Final
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +16,9 @@ import javax.persistence.Table;
 @Table(name = "usuarios")
 public class Usuarios implements java.io.Serializable {
 	
+
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@Column(name = "nombre_usuario")
 	private String nombreUsuario;
@@ -39,7 +41,6 @@ public class Usuarios implements java.io.Serializable {
 	@Column(name = "fecha_nacimiento")
 	private LocalDate fechaNacimiento;
 	
-	private byte[] foto;
 
 	public Usuarios() {
 	}
@@ -55,17 +56,7 @@ public class Usuarios implements java.io.Serializable {
 		this.fechaNacimiento = fechaNacimiento;
 	}
 
-	public Usuarios(String nombreUsuario, String rol, String nombre, String apellidos, String contraseña, String email,
-			LocalDate fechaNacimiento, byte[] foto) {
-		this.nombreUsuario = nombreUsuario;
-		this.rol = rol;
-		this.nombre = nombre;
-		this.apellidos = apellidos;
-		this.contraseña = contraseña;
-		this.email = email;
-		this.fechaNacimiento = fechaNacimiento;
-		this.foto = foto;
-	}
+
 
 	public String getNombreUsuario() {
 		return this.nombreUsuario;
@@ -121,14 +112,6 @@ public class Usuarios implements java.io.Serializable {
 
 	public void setFechaNacimiento(LocalDate fechaNacimiento) {
 		this.fechaNacimiento = fechaNacimiento;
-	}
-
-	public byte[] getFoto() {
-		return this.foto;
-	}
-
-	public void setFoto(byte[] foto) {
-		this.foto = foto;
 	}
 
 }

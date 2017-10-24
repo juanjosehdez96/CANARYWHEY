@@ -1,9 +1,15 @@
 package controlador;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,8 +20,11 @@ import javax.servlet.http.HttpSession;
 
 import org.hibernate.Session;
 
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
 import modelo.Categorias;
 import modelo.HibernateUtil;
+import modelo.Productos;
 import modelo.Usuarios;
 
 /**
@@ -116,7 +125,51 @@ public class Servlet extends HttpServlet {
 			case "seleccionProductos":
 				url = base + "seleccionProducto.jsp";
 				break;
+
+			case "Pedidos":
+				añadirProductos(request);
+				url = base + "pedidos.jsp";
+				break;
+
+			case "misPedidos":
+				url = base + "pedidos.jsp";
+				break;
+
+			case "addProductos":
+				if (request.getParameter("volver") != null) {
+					url = base + "productos.jsp";
+					break;
+				} else {
+
+					if (request.getParameter("guardarCambios") != null) {
+						addProductos(request);
+						url = base + "productos.jsp";
+					}
+					url = base + "añadirProductos.jsp";
+					
+				}
+				break;
+
+				
+
+			case "addCategorias":
+				if (request.getParameter("volver") != null) {
+					url = base + "productos.jsp";
+					break;
+				} else {
+
+					if (request.getParameter("guardarCambios") != null) {
+						addCategorias(request);
+						url = base + "productos.jsp";
+
+					} else {
+						url = base + "añadirCategorias.jsp";
+						break;
+					}
+				}
+
 			}
+
 		}
 		request.getRequestDispatcher(url).forward(request, response);
 
@@ -225,9 +278,71 @@ public class Servlet extends HttpServlet {
 	}
 
 	public void cerrarSesion(HttpServletRequest request) {
-
 		HttpSession atrsesion = request.getSession();
 		atrsesion.invalidate();
 
 	}
+
+	public void añadirProductos(HttpServletRequest request) {
+
+		HttpSession carritoSesion = request.getSession();
+
+		@SuppressWarnings("unchecked")
+		HashMap<Integer, Productos> carrito = (HashMap<Integer, Productos>) carritoSesion.getAttribute("carrito");
+
+		if (carrito == null) {
+			carrito = new HashMap<Integer, Productos>();
+		}
+
+		Session sesion = HibernateUtil.getSessionFactory().openSession();
+
+		int idProducto = Integer.parseInt(request.getParameter("proId"));
+
+		Productos producto = (Productos) sesion.get(Productos.class, idProducto);
+
+		carrito.put(idProducto, producto);
+
+		carritoSesion.setAttribute("carrito", carrito);
+
+	}
+
+	public void addProductos(HttpServletRequest request) {
+
+	}
+
+	public void addCategorias(HttpServletRequest request) {
+
+		String nombreCategoria = request.getParameter("nombreCategoria");
+
+		if (!nombreCategoria.equals("")) {
+			Categorias categoria = new Categorias(nombreCategoria);
+
+			Session session = HibernateUtil.getSessionFactory().openSession();
+			session.beginTransaction();
+
+			session.save(categoria); // <|--- Aqui guardamos el objeto en la base de datos.
+
+			session.getTransaction().commit();
+			session.close();
+		}
+
+	}
+
+	public Image abrirImagen() throws SQLException, IOException {
+		BufferedImage rpta = null;
+		Image image = null;
+		File fichero = new File("imgsUsuarios/.png");
+		try {
+
+			InputStream in = new FileInputStream(fichero);
+			rpta = javax.imageio.ImageIO.read(in);
+			image = SwingFXUtils.toFXImage(rpta, null);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return image;
+	}
+
 }

@@ -8,6 +8,9 @@ import java.util.Date;
  */
 public class Pedidos implements java.io.Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
+	
 	private Integer codigoPedido;
 	private int nombreUsuario;
 	private Date fechaPedido;
