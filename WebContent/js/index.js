@@ -41,10 +41,7 @@ $('.tab a').on('click', function(e) {
 });
 
 $("#datepicker").datepicker({
-	iconsLibrary : 'fontawesome',
-	format : 'dd-mm-yyyy'
+	format : 'dd-mm-yyyy',
 
 });
-
-
 

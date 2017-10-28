@@ -21,7 +21,6 @@
 
 	<%
 		HttpSession atrsesion = request.getSession();
-
 		String user = (String) atrsesion.getAttribute("nombreDeUsuario");
 		Session datos = HibernateUtil.getSessionFactory().openSession();
 		String idCategoria = request.getParameter("id");
@@ -61,16 +60,17 @@
 	%>
 
 	<form action="/CANARYWHEY/Servlet?action=addCategorias" method="post">
-		<input class="btn btn-primary" type="submit" name="crearPCategoria" value="Añadir Categorias"
+		<input class="btn btn-primary" type="submit" name="crearPCategoria"
+			value="Añadir Categorias"
 			style="margin-top: 7%; float: left; margin-left: 20%; position: absolute;" />
 	</form>
 
 	<form action="/CANARYWHEY/Servlet?action=addProductos" method="post">
-		<input class="btn btn-primary" type="submit" name="crearProducto" value="Añadir Productos"
-			id="añadirProductos"
+		<input class="btn btn-primary" type="submit" name="crearProducto"
+			value="Añadir Productos" id="añadirProductos"
 			style="margin-top: 7%; float: left; margin-left: 79%; position: absolute;" />
 	</form>
-	
+
 	<%
 		}
 
@@ -105,7 +105,7 @@
 	<div id="barraizquierda">
 
 		<h2 style="text-align: center;">
-			<a href="#"> CATEGORÍAS</a>
+			<a href="/CANARYWHEY/Servlet?action=Productos"> CATEGORÍAS</a>
 		</h2>
 		<ul>
 			<%
@@ -124,7 +124,19 @@
 			</c:forEach>
 
 		</ul>
+
+		<form action="/CANARYWHEY/Servlet?action=Productos" method="post">
+			<div class="col-lg-6" style="max-width: 100%">
+				<div class="input-group">
+					<input type="text" name="busqueda" class="form-control" /> <span
+						class="input-group-btn">
+						<button class="btn btn-primary" type="submit">Buscar</button>
+					</span>
+				</div>
+			</div>
+		</form>
 	</div>
+
 
 	<%
 		}
@@ -155,8 +167,16 @@
 
 	<%
 		} else {
-			productos = (ArrayList<Productos>) datos.createQuery("from Productos").list();
-			pageContext.setAttribute("arrayProductos", productos);
+			if (request.getAttribute("productosBuscados") != null) {
+				Object product = request.getAttribute("productosBuscados");
+
+				productos = (ArrayList<Productos>) product;
+				pageContext.setAttribute("arrayProductos", productos);
+
+			} else {
+				productos = (ArrayList<Productos>) datos.createQuery("from Productos").list();
+				pageContext.setAttribute("arrayProductos", productos);
+			}
 	%>
 	<div id="muestraProductos">
 		<h2>PRODUCTOS</h2>

@@ -1,8 +1,10 @@
 package controlador;
 
 import java.awt.image.BufferedImage;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -11,12 +13,15 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.persistence.Query;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import org.hibernate.Session;
 
@@ -31,6 +36,7 @@ import modelo.Usuarios;
  * Servlet implementation class Servlet
  */
 @WebServlet("/Servlet")
+@MultipartConfig
 public class Servlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -90,11 +96,23 @@ public class Servlet extends HttpServlet {
 				break;
 
 			case "modificarCuenta":
-				if (request.getParameter("guardarCambios") != null) {
-					modificarUsuarios(request);
+
+				if (request.getParameter("volver") != null) {
 					url = base + "miCuenta.jsp";
-				} else
-					url = base + "modificarCuenta.jsp";
+				} else {
+					if (request.getParameter("guardarCambios") != null) {
+
+						try {
+							modificarUsuarios(request);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+						url = base + "miCuenta.jsp";
+					} else
+						url = base + "modificarCuenta.jsp";
+				}
 				break;
 
 			case "Cuenta":
@@ -116,8 +134,14 @@ public class Servlet extends HttpServlet {
 				break;
 
 			case "Productos":
-				url = base + "productos.jsp";
-				break;
+				if (request.getParameter("busqueda") != null) {
+					busquedaProductos(request);
+					url = base + "productos.jsp";
+					break;
+				} else {
+					url = base + "productos.jsp";
+					break;
+				}
 
 			case "seleccionCategoria":
 				url = base + "productos.jsp";
@@ -127,43 +151,91 @@ public class Servlet extends HttpServlet {
 				break;
 
 			case "Pedidos":
-				añadirProductos(request);
-				url = base + "pedidos.jsp";
-				break;
+				if (request.getParameter("btnCarrito") != null) {
+					añadirProductosCarrito(request);
+					url = base + "pedidos.jsp";
+					break;
+				}
+				if (request.getParameter("btnEliminar") != null) {
+					eliminarProducto(request);
+					url = base + "productos.jsp";
+					break;
+				}
 
 			case "misPedidos":
 				url = base + "pedidos.jsp";
 				break;
 
 			case "addProductos":
-				if (request.getParameter("volver") != null) {
-					url = base + "productos.jsp";
-					break;
-				} else {
+				String user = (String) atrsesion.getAttribute("nombreDeUsuario");
+				Session session = HibernateUtil.getSessionFactory().openSession();
+				Usuarios usuario = (Usuarios) session.get(Usuarios.class, user);
 
-					if (request.getParameter("guardarCambios") != null) {
-						addProductos(request);
+				if (usuario.getRol().equals("Administrador")) {
+					if (request.getParameter("volver") != null) {
 						url = base + "productos.jsp";
-					}
-					url = base + "añadirProductos.jsp";
-					
-				}
-				break;
+						break;
+					} else {
 
-				
+						if (request.getParameter("guardarProductos") != null) {
+							addProductos(request);
+							url = base + "productos.jsp";
+							break;
+						} else {
+							url = base + "añadirProductos.jsp";
+							break;
+						}
+					}
+				} else {
+					url = base + "bienvenidaLogueado.jsp";
+
+				}
 
 			case "addCategorias":
+				String user1 = (String) atrsesion.getAttribute("nombreDeUsuario");
+				Session session1 = HibernateUtil.getSessionFactory().openSession();
+				Usuarios usuario1 = (Usuarios) session1.get(Usuarios.class, user1);
+
+				if (usuario1.getRol().equals("Administrador")) {
+					if (request.getParameter("volver") != null) {
+						url = base + "productos.jsp";
+						break;
+					} else {
+
+						if (request.getParameter("guardarCategorias") != null) {
+							addCategorias(request);
+							url = base + "productos.jsp";
+							break;
+
+						} else {
+							url = base + "añadirCategorias.jsp";
+							break;
+						}
+					}
+				} else {
+					url = base + "bienvenidaLogueado.jsp";
+					break;
+
+				}
+
+			case "modificarProductos":
 				if (request.getParameter("volver") != null) {
 					url = base + "productos.jsp";
 					break;
 				} else {
 
 					if (request.getParameter("guardarCambios") != null) {
-						addCategorias(request);
-						url = base + "productos.jsp";
+						try {
+							modificarProductos(request);
+							url = base + "productos.jsp";
+							break;
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 
 					} else {
-						url = base + "añadirCategorias.jsp";
+
+						url = base + "modificarProductos.jsp";
 						break;
 					}
 				}
@@ -181,7 +253,7 @@ public class Servlet extends HttpServlet {
 		String nombre = request.getParameter("nombre");
 		String apellidos = request.getParameter("apellidos");
 		String nombreUsuario = request.getParameter("nombreUsuario");
-		String contraseña = request.getParameter("contraseña");
+		String contraseña = request.getParameter("contrasena");
 		String email = request.getParameter("email");
 
 		DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -222,7 +294,7 @@ public class Servlet extends HttpServlet {
 
 	}
 
-	public void modificarUsuarios(HttpServletRequest request) {
+	public void modificarUsuarios(HttpServletRequest request) throws Exception {
 
 		HttpSession atrsesion = request.getSession();
 		String user = (String) atrsesion.getAttribute("nombreDeUsuario");
@@ -232,13 +304,32 @@ public class Servlet extends HttpServlet {
 
 		usuario.setNombre(request.getParameter("nombre"));
 		usuario.setApellidos(request.getParameter("apellidos"));
-		usuario.setContraseña(request.getParameter("contraseña"));
+		usuario.setContraseña(request.getParameter("contrasena"));
 		usuario.setEmail(request.getParameter("email"));
 
 		LocalDate fechaNacimiento = LocalDate.parse(request.getParameter("fechaNacimiento"));
 		usuario.setFechaNacimiento(fechaNacimiento);
 
 		atrsesion.setAttribute("nombreDeUsuario", usuario.getNombreUsuario());
+
+		Part fotoPart = request.getPart("file");
+		int fotoSize = (int) fotoPart.getSize();
+
+		byte[] foto = null;
+		if (fotoSize > 0) {
+
+			foto = new byte[fotoSize];
+			try (DataInputStream dis = new DataInputStream(fotoPart.getInputStream())) {
+				dis.readFully(foto);
+
+				File file = new File("C://Users/Juan José/git/CANARYWHEY/WebContent/imgsUsuarios", user + ".jpg");
+				FileOutputStream salida = new FileOutputStream(file);
+				salida.write(foto);
+				salida.close();
+
+			}
+		}
+
 		session.beginTransaction();
 
 		session.update(usuario);
@@ -265,7 +356,7 @@ public class Servlet extends HttpServlet {
 		} else {
 
 			if (usuario.getNombreUsuario().equals(user)
-					&& usuario.getContraseña().equals(request.getParameter("contraseña"))) {
+					&& usuario.getContraseña().equals(request.getParameter("contrasena"))) {
 				session.close();
 				return true;
 
@@ -283,7 +374,7 @@ public class Servlet extends HttpServlet {
 
 	}
 
-	public void añadirProductos(HttpServletRequest request) {
+	public void añadirProductosCarrito(HttpServletRequest request) {
 
 		HttpSession carritoSesion = request.getSession();
 
@@ -306,8 +397,45 @@ public class Servlet extends HttpServlet {
 
 	}
 
-	public void addProductos(HttpServletRequest request) {
+	public void addProductos(HttpServletRequest request) throws IllegalStateException, IOException, ServletException {
 
+		String nombreProducto = request.getParameter("nombre");
+
+		int codigoCategoria = Integer.parseInt(request.getParameter("nombreCategoria"));
+		int precio = Integer.parseInt(request.getParameter("precio"));
+		int stock = Integer.parseInt(request.getParameter("stock"));
+
+		if (codigoCategoria != 0 && !nombreProducto.equals("") && precio != 0 && stock != 0) {
+
+			Productos producto = new Productos(nombreProducto, codigoCategoria, precio, stock);
+
+			Session session = HibernateUtil.getSessionFactory().openSession();
+			session.beginTransaction();
+
+			session.save(producto); // <|--- Aqui guardamos el objeto en la base de datos.
+			session.getTransaction().commit();
+			session.close();
+
+			Part fotoPart = request.getPart("file");
+			int fotoSize = (int) fotoPart.getSize();
+
+			byte[] foto = null;
+			if (fotoSize > 0) {
+
+				foto = new byte[fotoSize];
+				try (DataInputStream dis = new DataInputStream(fotoPart.getInputStream())) {
+					dis.readFully(foto);
+
+					File file = new File("C://Users/Juan José/git/CANARYWHEY/WebContent/imgsProductos",
+							(producto.getCodigoProducto()) + ".jpg");
+					System.out.println(codigoCategoria);
+					FileOutputStream salida = new FileOutputStream(file);
+					salida.write(foto);
+					salida.close();
+				}
+			}
+
+		}
 	}
 
 	public void addCategorias(HttpServletRequest request) {
@@ -325,24 +453,80 @@ public class Servlet extends HttpServlet {
 			session.getTransaction().commit();
 			session.close();
 		}
+	}
+
+	public void eliminarProducto(HttpServletRequest request) {
+
+		String idProducto = request.getParameter("proId");
+
+		Session session = HibernateUtil.getSessionFactory().openSession();
+
+		Productos producto = (Productos) session.get(Productos.class, Integer.parseInt(idProducto));
+
+		File file = new File("C://Users/Juan José/git/CANARYWHEY/WebContent/imgsProductos", idProducto + ".jpg");
+		file.delete();
+
+		session.beginTransaction();
+
+		session.delete(producto);
+
+		session.getTransaction().commit();
+		session.close();
 
 	}
 
-	public Image abrirImagen() throws SQLException, IOException {
-		BufferedImage rpta = null;
-		Image image = null;
-		File fichero = new File("imgsUsuarios/.png");
-		try {
+	public void modificarProductos(HttpServletRequest request) throws Exception {
 
-			InputStream in = new FileInputStream(fichero);
-			rpta = javax.imageio.ImageIO.read(in);
-			image = SwingFXUtils.toFXImage(rpta, null);
+		int idProducto = Integer.parseInt(request.getParameter("proId"));
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Productos producto = (Productos) session.get(Productos.class, idProducto);
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		producto.setNombre(request.getParameter("nombre"));
+		producto.setPrecio(Integer.parseInt(request.getParameter("precio")));
+		producto.setStock(Integer.parseInt(request.getParameter("stock")));
+		producto.setCodigoCategoria(Integer.parseInt(request.getParameter("nombreCategoria")));
+
+		Part fotoPart = request.getPart("file");
+		int fotoSize = (int) fotoPart.getSize();
+
+		byte[] foto = null;
+		if (fotoSize > 0) {
+
+			foto = new byte[fotoSize];
+			try (DataInputStream dis = new DataInputStream(fotoPart.getInputStream())) {
+				dis.readFully(foto);
+
+				File file = new File("C://Users/Juan José/git/CANARYWHEY/WebContent/imgsProductos",
+						idProducto + ".jpg");
+				FileOutputStream salida = new FileOutputStream(file);
+				salida.write(foto);
+				salida.close();
+
+			}
 		}
 
-		return image;
+		session.beginTransaction();
+
+		session.update(producto);
+
+		session.getTransaction().commit();
+		session.close();
+
+	}
+
+	public void busquedaProductos(HttpServletRequest request) {
+		Session datos = HibernateUtil.getSessionFactory().openSession();
+
+		String nombre = request.getParameter("busqueda");
+		Query query = datos.createQuery("from Productos where nombre LIKE '%" + nombre + "%'");
+		if (query != null) {
+
+			@SuppressWarnings("unchecked")
+			ArrayList<Productos> productos = (ArrayList<Productos>) query.getResultList();
+
+			request.setAttribute("productosBuscados", productos);
+		}
+
 	}
 
 }

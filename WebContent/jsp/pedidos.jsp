@@ -144,7 +144,7 @@
 					<td colspan="2" class="hidden-xs"></td>
 					<td class="hidden-xs text-center" id="total"><strong>Total
 							&euro; </strong></td>
-					<td><a href="#" class="btn btn-success btn-block">Checkout
+					<td><a href="/CANARYWHEY/Servlet?action=Checkout" class="btn btn-success btn-block">Checkout
 							<i class="fa fa-angle-right"></i>
 					</a></td>
 				</tr>
@@ -158,7 +158,6 @@
 	<%
 		}
 	%>
-
 
 
 

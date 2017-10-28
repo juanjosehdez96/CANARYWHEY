@@ -13,6 +13,66 @@
 <script src="jquery/jquery-3.2.1.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/popper.js"></script>
+<script src="js/jquery.validate.min.js"></script>
+
+
+
+
+<script>
+
+$(document).ready(function () {
+	$("#btnGuardar").on("click", function() {
+		
+		// name validation
+	    var nameregex = /^[a-z\d_\d-]{2,15}$/i; 
+
+	   
+	   $.validator.addMethod("validname", function( value, element ) {
+	       return this.optional( element ) || nameregex.test( value );
+	   }); 
+	   
+	   
+	   $("#formulario").validate({
+		   
+		   errorClass: "my-error-class",
+		   validClass: "my-valid-class",
+		    
+		    rules: {
+		        nombre: {  required: true, validname: true},
+		        precio: { required: true, digits:true},
+		        stock: { required:true, digits:true},
+		        file: { required: true, extension: "jpg|png"}
+		       
+		    },
+		    messages: {
+		        nombre: "Nombre no válido.",
+		        precio: "Introduzca valor numérico.",
+		        stock: "Introduzca valor numérico.",
+		        file: "Tipo de archivo no válido."
+		        
+		    
+		    }});  
+		
+		});
+
+});
+
+
+</script>
+
+<style>
+.my-error-class{
+    color:red;
+    font-weight: bold;
+     margin-left: 1.5%;
+
+    
+}
+.my-valid-class {
+    color:green;
+      font-weight: bold;
+}
+</style>
 
 
 
@@ -23,7 +83,7 @@
 
 	<%
 		HttpSession atrsesion = request.getSession();
-		String user = (String) atrsesion.getAttribute("nombreDeUsuario");
+			String user = (String) atrsesion.getAttribute("nombreDeUsuario");
 
 		Session datos = HibernateUtil.getSessionFactory().openSession();
 		Usuarios usuario = (Usuarios) datos.get(Usuarios.class, user);
@@ -62,7 +122,7 @@
 
 
 	<div id="table" class="table-editable" style="width: 100%;">
-		<form action="Servlet?action=addProductos" method="post">
+		<form action="Servlet?action=addProductos" method="post" enctype="multipart/form-data" id="formulario">
 
 			<span class="table-add glyphicon glyphicon-plus"></span>
 			<table class="table">
@@ -76,12 +136,12 @@
 					<tr>
 						<th scope="row">1</th>
 						<td>Nombre del producto:</td>
-						<td><input type="text" /></td>
+						<td><input type="text" name="nombre" /></td>
 					</tr>
 					<tr>
 						<th scope="row">2</th>
 						<td>Categoría a la que pertenece:</td>
-						<td><select>
+						<td><select name="nombreCategoria">
 								<%
 									ArrayList<Categorias> arrayCategorias = (ArrayList<Categorias>) datos.createQuery("from Categorias").list();
 
@@ -89,7 +149,7 @@
 								%>
 								<c:forEach var="categorias" items="${arraycategorias}">
 
-									<option>${categorias.nombre}</option>
+									<option value="${categorias.codigoCategoria}">${categorias.nombre}</option>
 
 
 								</c:forEach>
@@ -102,19 +162,26 @@
 					<tr>
 						<th scope="row">3</th>
 						<td>Precio:</td>
-						<td><input type="text" /></td>
+						<td><input type="text" name="precio"/></td>
 
 					</tr>
 					<tr>
 						<th scope="row">4</th>
-						<td>Stock:</td>
-						<td><input type="text" /></td>
+						<td>Unidades disponibles:</td>
+						<td><input type="text" name="stock"/></td>
+					</tr>
+
+					<tr>
+						<th scope="row">5</th>
+						<td>Imagen:</td>
+						<td><input type="file" name="file" accept="image/*" /></td>
 					</tr>
 				</tbody>
 			</table>
 			<input type="submit" style="margin-left: 30%" value="Guardar Cambios"
-				name="guardarCambios" class="btn btn-primary" /> <input
-				type="submit" style="margin-left: 20%" value="Volver" name="volver"
+				name="guardarProductos" class="btn btn-primary" id="btnGuardar"/> 
+				<input	type="submit" style="margin-left: 20%" value="Volver" name="volver" 
+				onclick="window.location.href='/CANARYWHEY/Servlet?action=Productos';"
 				class="btn btn-primary" />
 
 

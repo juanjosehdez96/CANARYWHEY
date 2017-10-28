@@ -22,39 +22,20 @@
 	<%
 		HttpSession atrsesion = request.getSession();
 		String user = (String) atrsesion.getAttribute("nombreDeUsuario");
-
 		Session datos = HibernateUtil.getSessionFactory().openSession();
-		
-
 		String idCategoria = request.getParameter("id");
-
 		String imageURL = "imgsProductos/";
-		
+
 		if (user != null) {
 
 			Usuarios usuario = (Usuarios) datos.get(Usuarios.class, user);
 	%>
 
-	<header>
-	
-	<script>
-	$(document).ready(function () {
-		
-		var boton = document.getElementById("btnCarrito");
-		boton.style.display="block";
-		
-	});
-		
-	</script>
-	
-	
-	 <!-- Navigation --> 
-	 <nav
+	<header> <!-- Navigation --> <nav
 		class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
 	<div class="container">
-		<a class="navbar-brand" href="/CANARYWHEY/Servlet">BIENVENIDO:
-			<%=user.toUpperCase()%></a> <a href="/CANARYWHEY/Servlet?action=Inicio">Cerrar
-			sesion</a>
+		<a class="navbar-brand" href="/CANARYWHEY/Servlet">BIENVENIDO: <%=user.toUpperCase()%></a>
+		<a href="/CANARYWHEY/Servlet?action=Inicio">Cerrar sesion</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse"
 			data-target="#navbarResponsive" aria-controls="navbarResponsive"
 			aria-expanded="false" aria-label="Toggle navigation">
@@ -81,8 +62,7 @@
 	<header> <!-- Navigation --> <nav
 		class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
 	<div class="container">
-		<a class="navbar-brand" href="/CANARYWHEY/Servlet">BIENVENIDO
-		</a>
+		<a class="navbar-brand" href="/CANARYWHEY/Servlet">BIENVENIDO </a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse"
 			data-target="#navbarResponsive" aria-controls="navbarResponsive"
 			aria-expanded="false" aria-label="Toggle navigation">
@@ -92,7 +72,7 @@
 			<ul class="navbar-nav ml-auto">
 				<li class="nav-item"><a class="nav-link"
 					href="/CANARYWHEY/Servlet">Inicio</a></li>
-						<li class="nav-item"><a class="nav-link"
+				<li class="nav-item"><a class="nav-link"
 					href="/CANARYWHEY/Servlet?action=Acceder">Acceder</a></li>
 				<li class="nav-item active"><a class="nav-link"
 					href="/CANARYWHEY/Servlet?action=Productos">Productos<span
@@ -101,16 +81,16 @@
 		</div>
 	</div>
 	</nav> </header>
-	
-	
+
+
 	<%
 		}
 	%>
-	
+
 
 	<!-- Sidebar -->
 	<div id="barraizquierda">
-		<h2>
+		<h2 style="text-align: center;">
 			<a href="#"> CATEGORÍAS</a>
 		</h2>
 		<ul>
@@ -127,11 +107,22 @@
 			</c:forEach>
 
 		</ul>
+
+		<form action="/CANARYWHEY/Servlet?action=Productos" method="post">
+			<div class="col-lg-6" style="max-width: 100%">
+				<div class="input-group">
+					<input type="text" name="busqueda" class="form-control" /> <span
+						class="input-group-btn">
+						<button class="btn btn-primary" type="submit">Buscar</button>
+					</span>
+				</div>
+			</div>
+		</form>
 	</div>
 
 	<%
-		String idProducto = request.getParameter("proId");
-		Productos producto = (Productos) datos.get(Productos.class, Integer.parseInt(idProducto));
+		int idProducto = Integer.parseInt(request.getParameter("proId"));
+		Productos producto = (Productos) datos.get(Productos.class, idProducto);
 
 		if (producto != null) {
 	%>
@@ -157,12 +148,43 @@
 					<%=producto.getPrecio()%>&euro;
 				</p>
 			</div>
-			<div>
-				<button  style="display: none" class="btn btn-primary" id="btnCarrito"
-					onclick="window.location.href='/CANARYWHEY/Servlet?action=Pedidos&proId=<%=idProducto%>'">Añadir
-					al carro</button>
-			</div>
+			<%
+				if (user != null) {
+			%>
+
+			<form action="Servlet?action=Pedidos&proId=<%=idProducto%>"
+				method="post">
+				<div id="botonesProductos">
+					<input type="submit" class="btn btn-primary"
+						value="Añadir al carro" id="btnCarrito" name="btnCarrito" />
+
+					<%
+						Usuarios usuario = (Usuarios) datos.get(Usuarios.class, user);
+								if (usuario.getRol().equals("Administrador")) {
+					%>
+
+					<input style="display: block; margin-top: 5%;" type="submit"
+						class="btn btn-primary" value="Eliminar Producto"
+						name="btnEliminar" /> <input
+						style="display: block; margin-top: 5%;" type="button"
+						class="btn btn-primary" value="Modificar Producto"
+						onclick="window.location.href='/CANARYWHEY/Servlet?action=modificarProductos&proId=<%=idProducto%>';" />
+
+
+					<input type="button" style="float: right; margin-left: 5%;"
+						onclick="window.location.href='/CANARYWHEY/Servlet?action=Productos';"
+						value="Volver" class="btn btn-primary" />
+				</div>
+
+
+				<%
+					}
+						}
+				%>
+			
 		</div>
+		</form>
+	</div>
 	</div>
 
 	<%

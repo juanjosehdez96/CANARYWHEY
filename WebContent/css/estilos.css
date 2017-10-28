@@ -1,3 +1,11 @@
+.my-error-class {
+    color:red;
+}
+.my-valid-class {
+    color:green;
+}
+
+
 #añadirProductos{
 
     margin-top: 7%;
@@ -5,7 +13,6 @@
     margin-left: 18%;
     position: absolute;
 
-	
 }
 
 
@@ -188,7 +195,7 @@ div h4 {
 	float: left;
 	margin-top: 4%;
 	width: 15%;
-	height: 84%;
+	height: 90%;
 
 
 }
@@ -232,10 +239,6 @@ div h4 {
 
 #table td, th {
 	border-bottom: 1px solid #ddd;
-}
-
-.btn-primary {
-	padding-bottom: 5px;
 }
 
 

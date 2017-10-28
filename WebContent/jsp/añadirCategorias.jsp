@@ -12,8 +12,59 @@
 <script src="jquery/jquery-3.2.1.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/popper.js"></script>
+<script src="js/jquery.validate.min.js"></script>
 
 
+<script>
+
+$(document).ready(function () {
+	$("#btnGuardar").on("click", function() {
+		
+		// name validation
+	    var nameregex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/i;
+
+	   
+	   $.validator.addMethod("validname", function( value, element ) {
+	       return this.optional( element ) || nameregex.test( value );
+	   }); 
+	   	 
+	   
+	   $("#formulario").validate({
+		   
+		   errorClass: "my-error-class",
+		   validClass: "my-valid-class",
+		    
+		    rules: {
+		    	nombreCategoria: {  required: true, validname: true}
+		        
+		    },
+		    messages: {
+		    	nombreCategoria: "Nombre no válido."		        
+		    
+		    }});  
+		
+		});
+
+});
+
+
+
+</script>
+
+<style>
+.my-error-class{
+    color:red;
+    font-weight: bold;
+    margin-left: 1.5%;
+
+    
+}
+.my-valid-class {
+    color:green;
+      font-weight: bold;
+}
+
+</style>
 
 
 
@@ -58,7 +109,7 @@
 
 
 	<div id="table" class="table-editable" style="width: 100%;">
-		<form action="Servlet?action=addCategorias" method="post">
+		<form action="Servlet?action=addCategorias" method="post" id="formulario">
 
 			<span class="table-add glyphicon glyphicon-plus"></span>
 			<table class="table">
@@ -77,11 +128,11 @@
 				</tbody>
 			</table>
 			
-			<input type="submit" style="margin-left: 30%" value="Guardar Cambios" name="guardarCambios"
+			<input type="submit" style="margin-left: 30%" value="Guardar Cambios" id="btnGuardar" name="guardarCategorias"
 				class="btn btn-primary" />
-			<input type="submit" style="margin-left: 20%" value="Volver" name="volver"
-				class="btn btn-primary" />
-
+			<button type="submit" style="margin-left: 20%;" name="volver"
+			 onclick="window.location.href='/CANARYWHEY/Servlet?action=Productos';"
+				class="btn btn-primary" >Volver</button>
 		</form>
 	</div>
 

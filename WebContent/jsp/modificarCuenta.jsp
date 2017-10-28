@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <%@page
-	import="modelo.Usuarios, modelo.HibernateUtil, org.hibernate.Session"%>
+	import="modelo.Usuarios, modelo.HibernateUtil, org.hibernate.Session, java.io.File"%>
 <head>
 
 <title>CANARYWHEY</title>
@@ -10,8 +10,92 @@
 <link rel="stylesheet" href="css/estilos.css">
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <script src="jquery/jquery-3.2.1.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
 <script src="js/popper.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.validate.min.js"></script>
+
+
+
+
+<script>
+
+$(document).ready(function () {
+	$("#btnGuardar").on("click", function() {
+		
+		// name validation
+	    var nameregex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/i;
+
+	   
+	   $.validator.addMethod("validname", function( value, element ) {
+	       return this.optional( element ) || nameregex.test( value );
+	   }); 
+	   
+	   
+	   var useregex = /^[a-z\d_]{2,15}$/i;  
+
+
+	   $.validator.addMethod("validuser", function( value, element ) {
+	       return this.optional( element ) || useregex.test( value );
+	   }); 
+	   
+	   // valid email pattern
+	   var eregex = /^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$/i;
+
+
+	   
+	   $.validator.addMethod("validemail", function( value, element ) {
+	       return this.optional( element ) || eregex.test( value );
+	   });
+	   
+	   $("#formulario").validate({
+		   
+		   errorClass: "my-error-class",
+		   validClass: "my-valid-class",
+		    
+		    rules: {
+		        nombre: {  required: true, validname: true},
+		        apellidos: { required: true, validname: true},
+		        email: { required:true, validemail: true},
+		        contrasena: { required: true, minlength: 6},
+		        file: { required: true, extension: "jpg|png"}
+		        },
+		      
+		   
+		    messages: {
+		        nombre: "Nombre no válido.",
+		        apellidos: "Apellidos no válidos.",
+		        email : "Formato de email incorrecto.",
+		        contrasena : "La contraseña debe tener minimo 6 caracteres.",
+		        file: "Tipo de archivo no válido."
+		    
+		    }});  
+		
+		});
+
+});
+
+
+</script>
+
+<style>
+.my-error-class{
+    color:red;
+    font-weight: bold;
+     margin-left: 1.5%;
+
+    
+}
+.my-valid-class {
+    color:green;
+      font-weight: bold;
+}
+
+
+
+
+
+
+</style>
 
 
 </head>
@@ -20,6 +104,7 @@
 	<%
 		HttpSession atrsesion = request.getSession();
 		String user = (String) atrsesion.getAttribute("nombreDeUsuario");
+		pageContext.setAttribute("user", user);
 
 		Session datos = HibernateUtil.getSessionFactory().openSession();
 		Usuarios usuario = (Usuarios) datos.get(Usuarios.class, user);
@@ -57,7 +142,8 @@
 
 
 	<div id="table" class="table-editable">
-		<form action="Servlet?action=modificarCuenta" method="post" >
+		<form action="Servlet?action=modificarCuenta" method="post"
+			enctype="multipart/form-data" id="formulario">
 
 			<span class="table-add glyphicon glyphicon-plus"></span>
 			<table class="table">
@@ -76,36 +162,31 @@
 					<tr>
 						<th scope="row">2</th>
 						<td>Nombre:</td>
-						<td><input contenteditable="true" type="text" name="nombre"
-							value="<%=usuario.getNombre()%>" /></td>
+						<td><input type="text" name="nombre" value="<%=usuario.getNombre()%>" /></td>
 
 					</tr>
 					<tr>
 						<th scope="row">3</th>
 						<td>Apellidos:</td>
-						<td><input contenteditable="true" type="text"
-							name="apellidos" value="<%=usuario.getApellidos()%>" /></td>
+						<td><input type="text" name="apellidos" value="<%=usuario.getApellidos()%>" /></td>
 
 					</tr>
 					<tr>
 						<th scope="row">4</th>
 						<td>Contraseña:</td>
-						<td><input contenteditable="true" type="text"
-							name="contraseña" value="<%=usuario.getContraseña()%>" /></td>
+						<td><input type="text" name="contrasena" value="<%=usuario.getContraseña()%>" /></td>
 
 					</tr>
 					<tr>
 						<th scope="row">5</th>
 						<td>Correo electrónico:</td>
-						<td><input contenteditable="true" type="text" name="email"
-							value="<%=usuario.getEmail()%>" /></td>
+						<td><input type="text" name="email"	value="<%=usuario.getEmail()%>" /></td>
 
 					</tr>
 					<tr>
 						<th scope="row">6</th>
 						<td>Fecha de nacimiento:</td>
-						<td><input contenteditable="true" type="text"
-							name="fechaNacimiento" value="<%=usuario.getFechaNacimiento()%>" /></td>
+						<td><input type="text" name="fechaNacimiento" value="<%=usuario.getFechaNacimiento()%>" /></td>
 
 					</tr>
 					<tr>
@@ -113,20 +194,48 @@
 						<td>Tipo de cuenta:</td>
 						<td><%=usuario.getRol()%></td>
 					</tr>
+
+					<tr>
+						<th scope="row">7</th>
+						<td>Foto:</td>
+						<td><input type="file" name="file" id="examinar" accept="image/*"/></td>
+					</tr>
+
+
+
 				</tbody>
 			</table>
-			<button style="margin-left: 40%" name="guardarCambios"
-				class="btn btn-primary">Guardar cambios</button>
+			<button type="submit" style="margin-left: 40%; margin-bottom: 10%"
+				name="guardarCambios" id="btnGuardar" class="btn btn-primary">Guardar
+				cambios</button>
+			<button type="submit" style="margin-left: 5%; margin-bottom: 10%"
+				name="volver" onclick="window.location.href='/CANARYWHEY/Servlet?action=Cuenta';"
+				class="btn btn-primary" >Volver</button>
+
+
 
 		</form>
 	</div>
 
-
+	<%
+		File file = new File("C://Users/Juan José/git/CANARYWHEY/WebContent/imgsUsuarios", user + ".jpg");
+		if (!file.exists()) {
+	%>
 	<div id="imagenUsuario">
 		<img src="imgsUsuarios/0.jpg" />
 	</div>
 
-	<input type="file" name="examinar" id="examinar" />
+	<%
+		} else {
+	%>
+
+	<div id="imagenUsuario">
+		<img src="imgsUsuarios/${user}.jpg" />
+	</div>
+
+	<%
+		}
+	%>
 
 
 	<footer>
@@ -138,7 +247,7 @@
 		</div>
 	</footer>
 
-	<script src="js/index.js"></script>
+
 </body>
 
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <%@page
-	import="modelo.Usuarios, modelo.HibernateUtil, org.hibernate.Session"%>
+	import="modelo.Usuarios, modelo.HibernateUtil, org.hibernate.Session, java.io.File;"%>
 <head>
 
 <title>CANARYWHEY</title>
@@ -23,6 +23,7 @@
 	<%
 		HttpSession atrsesion = request.getSession();
 		String user = (String) atrsesion.getAttribute("nombreDeUsuario");
+		pageContext.setAttribute("user", user);
 
 		Session datos = HibernateUtil.getSessionFactory().openSession();
 		Usuarios usuario = (Usuarios) datos.get(Usuarios.class, user);
@@ -123,11 +124,25 @@
 		</form>
 	</div>
 
+	<%	
+		File file = new File("C://Users/Juan José/git/CANARYWHEY/WebContent/imgsUsuarios", user + ".jpg");
+		if (!file.exists()) {
+	%>
 	<div id="imagenUsuario">
 		<img src="imgsUsuarios/0.jpg" />
 	</div>
 
+	<%
+		} else {
+	%>
 
+	<div id="imagenUsuario">
+		<img src="imgsUsuarios/${user}.jpg" />
+	</div>
+
+	<%
+		}
+	%>
 
 
 	<footer>

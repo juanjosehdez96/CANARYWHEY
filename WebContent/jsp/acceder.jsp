@@ -13,12 +13,90 @@
 <script
 	src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
 <link href="css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+
+<script src="js/popper.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="css/bootstrap-datepicker.min.css" />
 <script src="js/bootstrap-datepicker.min.js"></script>
+<link rel="stylesheet" href="css/style.css">
+<script src="js/jquery.validate.min.js"></script>
+
+<script>
+
+$(document).ready(function () {
+	$("#btnRegistro").on("click", function() {
+		
+		// name validation
+	    var nameregex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/i;
+
+	   
+	   $.validator.addMethod("validname", function( value, element ) {
+	       return this.optional( element ) || nameregex.test( value );
+	   }); 
+	   
+	   
+	   var useregex = /^[a-z\d_]{2,15}$/i;  
 
 
+	   $.validator.addMethod("validuser", function( value, element ) {
+	       return this.optional( element ) || useregex.test( value );
+	   }); 
+	   
+	   // valid email pattern
+	   var eregex = /^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$/i;
+
+
+	   
+	   $.validator.addMethod("validemail", function( value, element ) {
+	       return this.optional( element ) || eregex.test( value );
+	   });
+	   
+	   $("#formulario").validate({
+		   
+		   errorClass: "my-error-class",
+		   validClass: "my-valid-class",
+		    
+		    rules: {
+		        nombre: {  required: true, validname: true},
+		        apellidos: { required: true, validname: true},
+		        nombreUsuario: { required: true, validuser: true},
+		        email: { required:true, validemail: true},
+		        contrasena: { required: true, minlength: 6},
+		        contrasena2: { required: true, equalTo:"#contrasena"}
+		    },
+		    messages: {
+		        nombre: "Nombre no válido.",
+		        apellidos: "Apellidos no válidos.",
+		        nombreUsuario:"Nombre de usuario no válido.",
+		        email : "Formato de email incorrecto.",
+		        contrasena : "La contraseña debe tener minimo 6 caracteres.",
+		        contrasena2 : "Las contraseñas deben der iguales."
+		    
+		    }});  
+		
+		});
+
+});
+
+
+
+</script>
+
+<style>
+.my-error-class{
+    color:red;
+    font-weight: bold;
+
+    
+}
+.my-valid-class {
+    color:green;
+      font-weight: bold;
+}
+
+
+
+</style>
 </head>
 
 <body>
@@ -62,12 +140,12 @@
 			<div id="signup">
 				<h1>Bienvenido/a!</h1>
 
-				<form action="Servlet?action=Registro" method="post">
+				<form action="Servlet?action=Registro" method="post" id="formulario">
 
 					<div class="top-row">
 						<div class="field-wrap">
 							<label> Nombre<span class="req">*</span>
-							</label> <input name="nombre" type="text" required autocomplete="off" />
+							</label> <input name="nombre" type="text" required autocomplete="off"/>
 						</div>
 
 						<div class="field-wrap">
@@ -75,7 +153,6 @@
 							</label> <input name="apellidos" type="text" required autocomplete="off" />
 						</div>
 					</div>
-
 					<div class="field-wrap">
 						<label> Nombre de usuario<span class="req">*</span>
 						</label> <input name="nombreUsuario" type="text" required
@@ -88,20 +165,20 @@
 
 					<div class="field-wrap">
 						<label> Contraseña<span class="req">*</span>
-						</label> <input name="contraseña" type="password" required
+						</label> <input name="contrasena" id="contraseña" type="password" required
 							autocomplete="off" />
 					</div>
 
 					<div class="field-wrap">
 						<label> Repetir Contraseña<span class="req">*</span>
-						</label> <input type="password" required autocomplete="off" />
+						</label> <input type="password" name="contrasena2" required autocomplete="off" />
 					</div>
 
 					<div class="input-group date">
-						<input id="datepicker" type="text" name="fechaNacimiento"
+						<input id="datepicker" required autocomplete="off" type="text" name="fechaNacimiento"
 							placeholder="Fecha de Nacimieto*" class="form-control"><span
 							class="input-group-addon"><i
-							class="glyphicon glyphicon-th"></i></span>
+							class="glyphicon glyphicon-ok"></i></span>
 					</div>
 					<br />
 
@@ -115,7 +192,7 @@
 					</div>
 					<br />
 
-					<button type="submit" class="button button-block">Enviar</button>
+					<button type="submit" id="btnRegistro" class="button button-block">Enviar</button>
 
 				</form>
 
@@ -133,7 +210,7 @@
 
 					<div class="field-wrap">
 						<label> Contraseña<span class="req">*</span>
-						</label> <input type="password" name="contraseña" required
+						</label> <input type="password" name="contrasena" required
 							autocomplete="off" />
 					</div>
 
@@ -152,9 +229,9 @@
 
 	</div>
 	<!-- /form -->
-
-
 	<script src="js/index.js"></script>
+	
+	
 
 </body>
 </html>
