@@ -165,7 +165,7 @@ $(document).ready(function () {
 
 					<div class="field-wrap">
 						<label> Contraseña<span class="req">*</span>
-						</label> <input name="contrasena" id="contraseña" type="password" required
+						</label> <input name="contrasena" id="contrasena" type="password" required
 							autocomplete="off" />
 					</div>
 

@@ -1,0 +1,5 @@
+El proyecto tiene agregadas en la base de datos dos cuentas de usuario: cliente y admin.
+Credenciales: admin -> '123456789'
+			  cliente -> '123456'
+			  
+El backup de la BBDD se encuentra dentro de la carpeta 'docs' que se incluye en el proyecto.

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 24-10-2017 a las 13:25:08
+-- Tiempo de generación: 28-10-2017 a las 18:58:17
 -- Versión del servidor: 10.1.21-MariaDB
 -- Versión de PHP: 5.6.31
 
@@ -74,10 +74,10 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`codigo_producto`, `nombre`, `codigo_categoria`, `precio`, `stock`) VALUES
-(1, 'Syntha-6', 1, 50, 25),
-(2, 'Mutant Mass', 2, 65, 30),
-(3, 'BCAA´S', 3, 20, 50),
-(4, 'Isopro', 1, 65, 25);
+(1, 'Syntha-6   ', 1, 65, 100),
+(2, 'Mutant Mass', 2, 55, 2),
+(3, 'BCAA´S', 3, 25, 60),
+(4, 'Isopro', 1, 60, 80);
 
 -- --------------------------------------------------------
 
@@ -104,17 +104,16 @@ CREATE TABLE `usuarios` (
   `nombre_usuario` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
   `contraseña` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
   `email` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
-  `fecha_nacimiento` date NOT NULL,
-  `foto` blob
+  `fecha_nacimiento` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`rol`, `nombre`, `apellidos`, `nombre_usuario`, `contraseña`, `email`, `fecha_nacimiento`, `foto`) VALUES
-('Administrador', 'juan', 'hernadez', 'juanadmin', '123', 'juan@gmail.com', '1995-12-03', NULL),
-('Cliente', 'Juan José', 'Hernandez Hernandez', 'juanjohdez', '123', 'juanjo@gmail.com', '1996-12-03', NULL);
+INSERT INTO `usuarios` (`rol`, `nombre`, `apellidos`, `nombre_usuario`, `contraseña`, `email`, `fecha_nacimiento`) VALUES
+('Administrador', 'juanjo  ', 'hernandez', 'admin', '25f9e794323b453885f5181f1b624d0b', 'juanjose@gmail.com', '1994-10-19'),
+('Cliente', 'juan', 'hernandez', 'cliente', 'e10adc3949ba59abbe56e057f20f883e', 'juan@gmail.com', '1996-12-03');
 
 --
 -- Índices para tablas volcadas

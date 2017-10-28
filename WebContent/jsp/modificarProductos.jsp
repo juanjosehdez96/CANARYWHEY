@@ -23,7 +23,7 @@ $(document).ready(function () {
 	$("#btnGuardar").on("click", function() {
 		
 		// name validation
-	    var nameregex = /^[a-z\d_\d-]{2,15}$/i; 
+	    var nameregex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/i;  
 	   
 	   $.validator.addMethod("validname", function( value, element ) {
 	       return this.optional( element ) || nameregex.test( value );
@@ -209,7 +209,7 @@ $(document).ready(function () {
 					<tr>
 						<th scope="row">5</th>
 						<td>Foto:</td>
-						<td><input type="file" name="file" id="examinar" accept="image/*" required/></td>
+						<td><input type="file" name="file" id="examinar" accept="image/*" /></td>
 					</tr>
 
 

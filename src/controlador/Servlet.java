@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.hibernate.Session;
 
 import javafx.embed.swing.SwingFXUtils;
@@ -253,7 +254,8 @@ public class Servlet extends HttpServlet {
 		String nombre = request.getParameter("nombre");
 		String apellidos = request.getParameter("apellidos");
 		String nombreUsuario = request.getParameter("nombreUsuario");
-		String contraseña = request.getParameter("contrasena");
+		String contra = request.getParameter("contrasena");
+		String contraseña = DigestUtils.md5Hex(contra);
 		String email = request.getParameter("email");
 
 		DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -348,6 +350,8 @@ public class Servlet extends HttpServlet {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 
 		Usuarios usuario = (Usuarios) session.get(Usuarios.class, user);
+		String contra = request.getParameter("contrasena");
+		String contraseña = DigestUtils.md5Hex(contra);
 
 		if (usuario == null) {
 			System.out.println("USUARIO NO REGISTRADO");
@@ -356,7 +360,7 @@ public class Servlet extends HttpServlet {
 		} else {
 
 			if (usuario.getNombreUsuario().equals(user)
-					&& usuario.getContraseña().equals(request.getParameter("contrasena"))) {
+					&& usuario.getContraseña().equals(contraseña)) {
 				session.close();
 				return true;
 
