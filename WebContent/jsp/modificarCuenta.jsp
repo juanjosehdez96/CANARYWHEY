@@ -13,18 +13,19 @@
 <script src="js/popper.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/jquery.validate.min.js"></script>
+<link href="css/estilos.css" rel="stylesheet">
 
-
+<link rel="stylesheet" href="css/jquery-confirm.min.css">
+<script src="js/jquery-confirm.min.js"></script>
 
 
 <script>
 
-$(document).ready(function () {
-	$("#btnGuardar").on("click", function() {
+$(document).ready(function () {	    
+	
 		
 		// name validation
-	    var nameregex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/i;
-
+	   var nameregex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/i;
 	   
 	   $.validator.addMethod("validname", function( value, element ) {
 	       return this.optional( element ) || nameregex.test( value );
@@ -41,61 +42,66 @@ $(document).ready(function () {
 	   // valid email pattern
 	   var eregex = /^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$/i;
 
-
 	   
 	   $.validator.addMethod("validemail", function( value, element ) {
 	       return this.optional( element ) || eregex.test( value );
 	   });
 	   
-	   $("#formulario").validate({
+	   $("#btnGuardar").on("click", function(event) {	
+		  
+		   event.preventDefault();
 		   
-		   errorClass: "my-error-class",
-		   validClass: "my-valid-class",
-		    
-		    rules: {
-		        nombre: {  required: true, validname: true},
-		        apellidos: { required: true, validname: true},
-		        email: { required:true, validemail: true},
-		        contrasena: { required: true, minlength: 6},
-		        file: { required: true, extension: "jpg|png"}
-		        },
-		      
-		   
-		    messages: {
-		        nombre: "Nombre no válido.",
-		        apellidos: "Apellidos no válidos.",
-		        email : "Formato de email incorrecto.",
-		        contrasena : "La contraseña debe tener minimo 6 caracteres.",
-		        file: "Tipo de archivo no válido."
-		    
-		    }});  
+		   $.confirm({
+			    title: '¿Estás seguro?',
+			    content: 'Los datos de tu cuenta serán modificados',
+			    type: 'red',
+			    typeAnimated: true,
+			    buttons: {
+			        tryAgain: {
+			            text: 'Aceptar',
+			            btnClass: 'btn-red',
+			            action: function(e){			            	
+			            	var validado = $("#formulario").valid();
+			            	if(validado) 			            		 
+			            		document.form.submit();			            	
+			            }
+			        },
+			        cerrar: function () {
+			        	return;
+			        }
+			    }
+			 }); 		
+	
 		
+		   $("#formulario").validate({   				
+			   
+			   errorClass: "my-error-class",
+			   validClass: "my-valid-class",
+			    
+			    rules: {
+			        nombre: {  required: true, validname: true},
+			        apellidos: { required: true, validname: true},
+			        email: { required:true, validemail: true},
+			        contrasena: { required: true, minlength: 6},
+			        file: { required: true}
+			        },
+			      
+			   
+			    messages: {
+			        nombre: "Nombre no válido.",
+			        apellidos: "Apellidos no válidos.",
+			        email : "Formato de email incorrecto.",
+			        contrasena : "La contraseña debe tener minimo 6 caracteres.",
+			        file: " / Tipo de archivo no válido."
+			    
+			    	}
+			    }); 	  			  
 		});
-
 });
 
 
 </script>
 
-<style>
-.my-error-class{
-    color:red;
-    font-weight: bold;
-     margin-left: 1.5%;
-
-    
-}
-.my-valid-class {
-    color:green;
-      font-weight: bold;
-}
-
-
-
-
-
-
-</style>
 
 
 </head>
@@ -143,7 +149,7 @@ $(document).ready(function () {
 
 	<div id="table" class="table-editable">
 		<form action="Servlet?action=modificarCuenta" method="post"
-			enctype="multipart/form-data" id="formulario">
+			enctype="multipart/form-data" id="formulario" name="form">
 
 			<span class="table-add glyphicon glyphicon-plus"></span>
 			<table class="table">
@@ -205,11 +211,11 @@ $(document).ready(function () {
 
 				</tbody>
 			</table>
-			<button type="submit" style="margin-left: 40%; margin-bottom: 10%"
-				name="guardarCambios" id="btnGuardar" class="btn btn-primary">Guardar
-				cambios</button>
+			<input type="hidden" name="guardarCambios"/>
+			<input type="submit" style="margin-left: 40%; margin-bottom: 10%"
+				 id="btnGuardar" class="btn btn-primary" value="Guardar cambios"/>
 			<button type="submit" style="margin-left: 5%; margin-bottom: 10%"
-				name="volver" onclick="window.location.href='/CANARYWHEY/Servlet?action=Cuenta';"
+				name="" onclick="window.location.href='/CANARYWHEY/Servlet?action=Cuenta';"
 				class="btn btn-primary" >Volver</button>
 
 

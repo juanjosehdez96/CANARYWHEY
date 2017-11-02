@@ -1,3 +1,4 @@
+<%@page import="java.nio.charset.CodingErrorAction"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@page
@@ -15,8 +16,6 @@
 <script src="js/jquery.validate.min.js"></script>
 
 
-
-
 <script>
 
 $(document).ready(function () {
@@ -28,8 +27,7 @@ $(document).ready(function () {
 	   $.validator.addMethod("validname", function( value, element ) {
 	       return this.optional( element ) || nameregex.test( value );
 	   }); 
-	   
-	   
+	      
 	   
 	
 	   $("#formulario").validate({
@@ -41,7 +39,7 @@ $(document).ready(function () {
 		        nombre: {  required: true, validname: true},
 		        precio: { required: true, digits:true},
 		        stock: { required:true, digits:true},
-		        file: { required: true, extension: "jpg|png"}
+		        file: { required: true}
 		       
 		    },
 		    messages: {
@@ -60,19 +58,6 @@ $(document).ready(function () {
 
 </script>
 
-<style>
-.my-error-class{
-    color:red;
-    font-weight: bold;
-     margin-left: 1.5%;
-
-    
-}
-.my-valid-class {
-    color:green;
-      font-weight: bold;
-}
-</style>
 
 
 
@@ -209,7 +194,7 @@ $(document).ready(function () {
 					<tr>
 						<th scope="row">5</th>
 						<td>Foto:</td>
-						<td><input type="file" name="file" id="examinar" accept="image/*" /></td>
+						<td><input type="file" name="file" id="examinar" src="imgsProductos/<%=producto.getCodigoProducto()%>.jpg" accept="image/*" /></td>
 					</tr>
 
 

@@ -30,6 +30,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import modelo.Categorias;
 import modelo.HibernateUtil;
+import modelo.ProductoCarrito;
 import modelo.Productos;
 import modelo.Usuarios;
 
@@ -106,7 +107,6 @@ public class Servlet extends HttpServlet {
 						try {
 							modificarUsuarios(request);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 
@@ -159,8 +159,8 @@ public class Servlet extends HttpServlet {
 				}
 				if (request.getParameter("btnEliminar") != null) {
 					eliminarProducto(request);
-					url = base + "productos.jsp";
-					break;
+					response.sendRedirect("/CANARYWHEY/Servlet?action=Productos");
+					return;
 				}
 
 			case "misPedidos":
@@ -180,8 +180,9 @@ public class Servlet extends HttpServlet {
 
 						if (request.getParameter("guardarProductos") != null) {
 							addProductos(request);
-							url = base + "productos.jsp";
-							break;
+							response.sendRedirect("/CANARYWHEY/Servlet?action=Productos");
+							return;
+
 						} else {
 							url = base + "añadirProductos.jsp";
 							break;
@@ -205,8 +206,8 @@ public class Servlet extends HttpServlet {
 
 						if (request.getParameter("guardarCategorias") != null) {
 							addCategorias(request);
-							url = base + "productos.jsp";
-							break;
+							response.sendRedirect("/CANARYWHEY/Servlet?action=Productos");
+							return;
 
 						} else {
 							url = base + "añadirCategorias.jsp";
@@ -240,6 +241,21 @@ public class Servlet extends HttpServlet {
 						break;
 					}
 				}
+			case "carrito":
+				if (request.getParameter("actualizar") != null) {
+					System.out.println("dentrooooo----------");
+					actualizarCarrito(request);
+					url = base + "pedidos.jsp";
+					break;
+				}
+				if (request.getParameter("borrar") != null) {
+					borrarProductosCarrito(request);
+					url = base + "pedidos.jsp";
+					break;
+				}
+
+				url = base + "pedidos.jsp";
+				break;
 
 			}
 
@@ -254,8 +270,7 @@ public class Servlet extends HttpServlet {
 		String nombre = request.getParameter("nombre");
 		String apellidos = request.getParameter("apellidos");
 		String nombreUsuario = request.getParameter("nombreUsuario");
-		String contra = request.getParameter("contrasena");
-		String contraseña = DigestUtils.md5Hex(contra);
+		String contraseña = DigestUtils.md5Hex(request.getParameter("contrasena"));
 		String email = request.getParameter("email");
 
 		DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -350,8 +365,7 @@ public class Servlet extends HttpServlet {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 
 		Usuarios usuario = (Usuarios) session.get(Usuarios.class, user);
-		String contra = request.getParameter("contrasena");
-		String contraseña = DigestUtils.md5Hex(contra);
+		String contraseña = DigestUtils.md5Hex(request.getParameter("contrasena"));
 
 		if (usuario == null) {
 			System.out.println("USUARIO NO REGISTRADO");
@@ -359,8 +373,7 @@ public class Servlet extends HttpServlet {
 			return false;
 		} else {
 
-			if (usuario.getNombreUsuario().equals(user)
-					&& usuario.getContraseña().equals(contraseña)) {
+			if (usuario.getNombreUsuario().equals(user) && usuario.getContraseña().equals(contraseña)) {
 				session.close();
 				return true;
 
@@ -383,21 +396,47 @@ public class Servlet extends HttpServlet {
 		HttpSession carritoSesion = request.getSession();
 
 		@SuppressWarnings("unchecked")
-		HashMap<Integer, Productos> carrito = (HashMap<Integer, Productos>) carritoSesion.getAttribute("carrito");
+		HashMap<Integer, ProductoCarrito> carrito = (HashMap<Integer, ProductoCarrito>) carritoSesion
+				.getAttribute("carrito");
 
 		if (carrito == null) {
-			carrito = new HashMap<Integer, Productos>();
+			carrito = new HashMap<Integer, ProductoCarrito>();
 		}
 
 		Session sesion = HibernateUtil.getSessionFactory().openSession();
 
 		int idProducto = Integer.parseInt(request.getParameter("proId"));
 
-		Productos producto = (Productos) sesion.get(Productos.class, idProducto);
+		if (carrito.get(idProducto) != null) {
+			int cantidad = carrito.get(idProducto).getCatidad();
+			carrito.get(idProducto).setCatidad(cantidad + 1);
 
-		carrito.put(idProducto, producto);
+		} else {
+			Productos producto = (Productos) sesion.get(Productos.class, idProducto);
+			ProductoCarrito item = new ProductoCarrito(producto, 1);
+			carrito.put(idProducto, item);
+		}
 
 		carritoSesion.setAttribute("carrito", carrito);
+
+	}
+
+	public void borrarProductosCarrito(HttpServletRequest request) {
+		
+		HttpSession carritoSesion = request.getSession();
+
+		@SuppressWarnings("unchecked")
+		HashMap<Integer, ProductoCarrito> carrito = (HashMap<Integer, ProductoCarrito>) carritoSesion
+				.getAttribute("carrito");
+		
+		int idProducto = Integer.parseInt(request.getParameter("proId"));
+		System.err.println(idProducto);
+		System.out.println(carrito.get(idProducto).getProducto().getNombre());
+		
+		carrito.remove(idProducto);
+		
+		carritoSesion.setAttribute("carrito", carrito);
+
 
 	}
 
@@ -530,6 +569,22 @@ public class Servlet extends HttpServlet {
 
 			request.setAttribute("productosBuscados", productos);
 		}
+
+	}
+
+	public void actualizarCarrito(HttpServletRequest request) {
+
+		HttpSession sesion = request.getSession();
+		int catidad = Integer.parseInt(request.getParameter("cantidad"));
+		int idProducto = Integer.parseInt(request.getParameter("proId"));
+
+		@SuppressWarnings("unchecked")
+		HashMap<Integer, ProductoCarrito> carro = (HashMap<Integer, ProductoCarrito>) sesion.getAttribute("carrito");
+
+		ProductoCarrito producto = carro.get(idProducto);
+		System.out.println(producto.getProducto().getNombre());
+
+		producto.setCatidad(catidad);
 
 	}
 

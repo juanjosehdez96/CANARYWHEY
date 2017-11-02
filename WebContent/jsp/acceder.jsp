@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="css/bootstrap-datepicker.min.css" />
 <script src="js/bootstrap-datepicker.min.js"></script>
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/estilos.css">
 <script src="js/jquery.validate.min.js"></script>
 
 <script>
@@ -70,7 +71,7 @@ $(document).ready(function () {
 		        nombreUsuario:"Nombre de usuario no válido.",
 		        email : "Formato de email incorrecto.",
 		        contrasena : "La contraseña debe tener minimo 6 caracteres.",
-		        contrasena2 : "Las contraseñas deben der iguales."
+		        contrasena2 : "Las contraseñas deben ser iguales."
 		    
 		    }});  
 		
@@ -82,21 +83,6 @@ $(document).ready(function () {
 
 </script>
 
-<style>
-.my-error-class{
-    color:red;
-    font-weight: bold;
-
-    
-}
-.my-valid-class {
-    color:green;
-      font-weight: bold;
-}
-
-
-
-</style>
 </head>
 
 <body>

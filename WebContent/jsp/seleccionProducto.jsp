@@ -12,11 +12,40 @@
 <script src="jquery/jquery-3.2.1.min.js"></script>
 <link rel="stylesheet" href="css/estilos.css">
 
+<link rel="stylesheet" href="css/jquery-confirm.min.css">
+<script src="js/jquery-confirm.min.js"></script>
 
 
 </head>
 <body>
 
+	<script>
+		$(document).ready(function() {
+			$("#btnEliminar").on("click", function(event) {
+
+				event.preventDefault();
+
+				$.confirm({
+					title : '¿Estás seguro?',
+					content : 'El producto será eliminado',
+					type : 'red',
+					typeAnimated : true,
+					buttons : {
+						tryAgain : {
+							text : 'Aceptar',
+							btnClass : 'btn-red',
+							action : function(e) {
+								document.form.submit();
+							}
+						},
+						cerrar : function() {
+							return;
+						}
+					}
+				});
+			});
+		});
+	</script>
 
 
 	<%
@@ -153,7 +182,7 @@
 			%>
 
 			<form action="Servlet?action=Pedidos&proId=<%=idProducto%>"
-				method="post">
+				method="post" name="form">
 				<div id="botonesProductos">
 					<input type="submit" class="btn btn-primary"
 						value="Añadir al carro" id="btnCarrito" name="btnCarrito" />
@@ -162,29 +191,26 @@
 						Usuarios usuario = (Usuarios) datos.get(Usuarios.class, user);
 								if (usuario.getRol().equals("Administrador")) {
 					%>
-
+					<input type="hidden" name="btnEliminar"/>
 					<input style="display: block; margin-top: 5%;" type="submit"
-						class="btn btn-primary" value="Eliminar Producto"
-						name="btnEliminar" /> <input
-						style="display: block; margin-top: 5%;" type="button"
+						class="btn btn-primary" value="Eliminar Producto" id="btnEliminar" />
+					<input style="display: block; margin-top: 5%;" type="button"
 						class="btn btn-primary" value="Modificar Producto"
 						onclick="window.location.href='/CANARYWHEY/Servlet?action=modificarProductos&proId=<%=idProducto%>';" />
-
 
 					<input type="button" style="float: right; margin-left: 5%;"
 						onclick="window.location.href='/CANARYWHEY/Servlet?action=Productos';"
 						value="Volver" class="btn btn-primary" />
-				</div>
 
 
-				<%
-					}
+					<%
 						}
-				%>
-			
+							}
+					%>
+
+				</div>
+			</form>
 		</div>
-		</form>
-	</div>
 	</div>
 
 	<%

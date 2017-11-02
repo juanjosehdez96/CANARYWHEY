@@ -1,5 +1,5 @@
 <%@page
-	import="modelo.Usuarios, modelo.HibernateUtil, org.hibernate.Session, java.util.ArrayList, java.util.HashMap, 
+	import="modelo.Usuarios, modelo.ProductoCarrito, modelo.HibernateUtil, org.hibernate.Session, java.util.ArrayList, java.util.HashMap, 
 	modelo.Categorias, modelo.Productos, java.util.Set;"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -16,20 +16,38 @@
 	href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"
 	rel="stylesheet">
 
+<link rel="stylesheet" href="css/jquery-confirm.min.css">
+<script src="js/jquery-confirm.min.js"></script>
+
 <script>
-	function actualizar() {
+	$(document).ready(function() {
+		$("button:even").on("click", function(event) {
 
-		var cantidad = parseInt(document.getElementById("cantidad").value);
-		var subtotal = parseInt(document.getElementById("subtotal").innerHTML);
-		var total = 0;
+			//event.preventDefault();
 
+			$.confirm({
+				title : '¿Estás seguro?',
+				content : 'El producto será eliminado',
+				type : 'red',
+				typeAnimated : true,
+				buttons : {
+					tryAgain : {
+						text : 'Aceptar',
+						btnClass : 'btn-red',
+						action : function(e) {
+							$("#formulario").submit();
 
-		document.getElementById("subtotal").innerHTML = (subtotal * cantidad);
-		document.getElementById("total").innerHTML = (total += subtotal);
-		
-
-	}
+						}
+					},
+					cerrar : function() {
+						return;
+					}
+				}
+			});
+		});
+	});
 </script>
+
 
 </head>
 <body>
@@ -42,12 +60,13 @@
 		Session datos = HibernateUtil.getSessionFactory().openSession();
 		Usuarios usuario = (Usuarios) datos.get(Usuarios.class, user);
 
-		HttpSession carritoSesion = request.getSession();
+		HttpSession sesion = request.getSession();
+		String idProducto = request.getParameter("proId");
 
 		@SuppressWarnings("unchecked")
-		HashMap<Integer, Productos> carro = (HashMap<Integer, Productos>) carritoSesion.getAttribute("carrito");
-		
-	
+		HashMap<Integer, ProductoCarrito> carro = (HashMap<Integer, ProductoCarrito>) sesion
+				.getAttribute("carrito");
+
 		//pageContext.setAttribute("arrayCarrito", carro);
 	%>
 
@@ -97,36 +116,57 @@
 				</tr>
 			</thead>
 
+
+
 			<%
-				for (Integer clave : claves) {
+				int subtotal = 0;
+					int total = 0;
+
+					for (Integer clave : claves) {
+						subtotal = carro.get(clave).getProducto().getPrecio() * carro.get(clave).getCatidad();
+						total += subtotal;
 			%>
+
 			<tbody>
 				<tr>
 					<td data-th="Product">
 						<div class="row">
 							<div class="col-sm-2 hidden-xs">
 								<img id="imagenCarro"
-									src="imgsProductos/<%=carro.get(clave).getCodigoProducto()%>.jpg"
+									src="imgsProductos/<%=carro.get(clave).getProducto().getCodigoProducto()%>.jpg"
 									alt="..." class="img-responsive" />
 							</div>
 							<div class="col-sm-10">
-								<h4 class="nomargin"><%=carro.get(clave).getNombre()%></h4>
+								<h4 class="nomargin"><%=carro.get(clave).getProducto().getNombre()%></h4>
 
 							</div>
 						</div>
 					</td>
-					<td data-th="Price"><%=carro.get(clave).getPrecio()%>&euro;</td>
-					<td data-th="Quantity"><input id="cantidad" name="cantidad" type="number"
-						class="form-control text-center" value="1>"></td>
-					<td data-th="Subtotal" class="text-center" id="subtotal"><%=carro.get(clave).getPrecio()%>&euro;</td>
-					<td class="actions" data-th="">
-						<button onclick="actualizar();" class="btn btn-info btn-sm">
+
+					<form action="Servlet?action=carrito" method="post" id="formulario"
+						name="form">
+					<td data-th="Price"><%=carro.get(clave).getProducto().getPrecio()%>&euro;</td>
+					<td data-th="Quantity"><input type="hidden" name="proId"
+						value="<%=carro.get(clave).getProducto().getCodigoProducto()%>" />
+						<input name="cantidad" type="number"
+						class="form-control text-center"
+						value="<%=carro.get(clave).getCatidad()%>" /></td>
+					<td data-th="Subtotal" class="text-center" id="subtotal"><%=subtotal%>&euro;</td>
+					<td class="actions" data-th=""><input type="hidden"
+						name="borrar" id="borrame"
+						value="<%=carro.get(clave).getProducto().getCodigoProducto()%>" />
+						<%
+							out.println(carro.get(clave).getProducto().getCodigoProducto());
+						%>
+						<button type="submit" name="actualizar"
+							class="btn btn-info btn-sm">
 							<i class="fa fa-refresh"></i>
 						</button>
-						<button class="btn btn-danger btn-sm">
+						<button type="submit" id="btnEliminar"
+							class="btn btn-danger btn-sm">
 							<i class="fa fa-trash-o"></i>
-						</button>
-					</td>
+						</button></td>
+					</form>
 				</tr>
 			</tbody>
 
@@ -143,9 +183,11 @@
 							Continuar comprando</a></td>
 					<td colspan="2" class="hidden-xs"></td>
 					<td class="hidden-xs text-center" id="total"><strong>Total
-							&euro; </strong></td>
-					<td><a href="/CANARYWHEY/Servlet?action=Checkout" class="btn btn-success btn-block">Checkout
-							<i class="fa fa-angle-right"></i>
+							<%=total%>&euro;
+					</strong></td>
+					<td><a href="/CANARYWHEY/Servlet?action=Checkout"
+						class="btn btn-success btn-block">Checkout <i
+							class="fa fa-angle-right"></i>
 					</a></td>
 				</tr>
 			</tfoot>

@@ -1,80 +1,81 @@
 .my-error-class {
-    color:red;
+	color: red;
+	font-weight: bold;
 }
+
 .my-valid-class {
-    color:green;
+	color: green;
+	font-weight: bold;
 }
 
-
-#añadirProductos{
-
-    margin-top: 7%;
-    float: left;
-    margin-left: 18%;
-    position: absolute;
-
+#añadirProductos {
+	margin-top: 7%;
+	float: left;
+	margin-left: 18%;
+	position: absolute;
 }
 
-
-#imagenCarro{
-	
+#imagenCarro {
 	width: 150%;
-	
 }
 
-html
-{
-    position: relative; 
-    min-height: 100%;
-}
-body
-{
-    margin: 0 0 65px;
+html {
+	position: relative;
+	min-height: 100%;
 }
 
-
-.table>tbody>tr>td, .table>tfoot>tr>td{
-    vertical-align: middle;
-   
+body {
+	margin: 0 0 65px;
 }
+
+.table>tbody>tr>td, .table>tfoot>tr>td {
+	vertical-align: middle;
+}
+
 @media screen and (max-width: 600px) {
-    table#cart tbody td .form-control{
-		width:20%;
+	table#cart tbody td .form-control {
+		width: 20%;
 		display: inline !important;
 	}
-	.actions .btn{
-		width:36%;
-		margin:1.5em 0;
+	.actions .btn {
+		width: 36%;
+		margin: 1.5em 0;
 	}
-	
-	.actions .btn-info{
-		float:left;
+	.actions .btn-info {
+		float: left;
 	}
-	.actions .btn-danger{
-		float:right;
+	.actions .btn-danger {
+		float: right;
 	}
-	
-	table#cart thead { display: none; }
-	table#cart tbody td { display: block; padding: .6rem; min-width:320px;}
-	table#cart tbody tr td:first-child { background: #333; color: #fff; }
+	table#cart thead {
+		display: none;
+	}
+	table#cart tbody td {
+		display: block;
+		padding: .6rem;
+		min-width: 320px;
+	}
+	table#cart tbody tr td:first-child {
+		background: #333;
+		color: #fff;
+	}
 	table#cart tbody td:before {
-		content: attr(data-th); font-weight: bold;
-		display: inline-block; width: 8rem;
+		content: attr(data-th);
+		font-weight: bold;
+		display: inline-block;
+		width: 8rem;
 	}
-	
-	
-	
-	table#cart tfoot td{display:block; }
-	table#cart tfoot td .btn{display:block;}
-	
+	table#cart tfoot td {
+		display: block;
+	}
+	table#cart tfoot td .btn {
+		display: block;
+	}
 }
 
 #cart {
 	padding-top: 5%;
-	
 }
-
-
 
 /* Creates a vertical nav starting at 768px (sm) */
 @media ( min-width : 768px) {
@@ -95,7 +96,6 @@ div h4 {
 }
 
 .container table {
-	
 	margin-top: 6.5%;
 }
 
@@ -196,8 +196,6 @@ div h4 {
 	margin-top: 4%;
 	width: 15%;
 	height: 90%;
-
-
 }
 
 #barraizquierda ul {
@@ -207,12 +205,10 @@ div h4 {
 #barraizquierda h2 {
 	padding-top: 30%;
 	margin-bottom: 20%;
-	
 }
 
 #barraizquierda h2 a {
 	color: white;
-
 }
 
 #barraizquierda a {
@@ -241,7 +237,6 @@ div h4 {
 	border-bottom: 1px solid #ddd;
 }
 
-
 #imagenUsuario img {
 	width: 15%;
 	height: 15%;
@@ -263,18 +258,14 @@ div h4 {
 	margin-bottom: 3%;
 }
 
-
 /*-----Pie de Pagina----*/
-
-
-footer
-{	
-	padding-top:1%;
-    width: 100%;
-    bottom: 0;
-    position: absolute;
-    height: 50px;
-    background-color: #2C3E50;
+footer {
+	padding-top: 1%;
+	width: 100%;
+	bottom: 0;
+	position: absolute;
+	height: 50px;
+	background-color: #2C3E50;
 }
 
 .footertext {

@@ -1,1 +1,4 @@
 /controlador/
+/hibernate.cfg.xml
+/hibernate.reveng.xml
+/modelo/
