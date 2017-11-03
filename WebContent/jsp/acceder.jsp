@@ -118,8 +118,8 @@ $(document).ready(function () {
 	<div class="form">
 
 		<ul class="tab-group">
-			<li class="tab active"><a href="#signup">Registrarse</a></li>
-			<li class="tab"><a href="#login">Iniciar Sesión</a></li>
+			<li class="tab"><a href="#signup">Registrarse</a></li>
+			<li class="tab active"><a href="#login">Iniciar Sesión</a></li>
 		</ul>
 
 		<div class="tab-content">
@@ -203,6 +203,17 @@ $(document).ready(function () {
 					<p class="forgot">
 						<a href="#">¿Olvidaste tu contraseña?</a>
 					</p>
+					
+					<%
+					String error = (String) request.getAttribute("error");
+						if(error != null) {
+					%>
+					
+					<h3 style="color: red; text-align:center"><%=error%></h3>
+							
+					<%
+						}				
+					%>
 
 					<button class="button button-block">Iniciar Sesión</button>
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <%@page
-	import="modelo.Usuarios, modelo.HibernateUtil, org.hibernate.Session, java.io.File;"%>
+	import="modelo.Usuarios, modelo.HibernateUtil,  modelo.ProductoCarrito, java.util.HashMap, org.hibernate.Session, java.io.File;"%>
 <head>
 
 <title>CANARYWHEY</title>
@@ -27,6 +27,17 @@
 
 		Session datos = HibernateUtil.getSessionFactory().openSession();
 		Usuarios usuario = (Usuarios) datos.get(Usuarios.class, user);
+		
+		@SuppressWarnings("unchecked")
+		HashMap<Integer, ProductoCarrito> carro = (HashMap<Integer, ProductoCarrito>) atrsesion
+				.getAttribute("carrito");
+
+		int numItems = 0;
+
+		if (carro != null) {
+			numItems = carro.size();
+			
+		}
 	%>
 
 	<header>
@@ -52,7 +63,7 @@
 						<li class="nav-item"><a class="nav-link"
 							href="/CANARYWHEY/Servlet?action=Productos">Productos</a></li>
 						<li class="nav-item"><a class="nav-link"
-							href="/CANARYWHEY/Servlet?action=misPedidos">Mis Pedidos</a></li>
+							href="/CANARYWHEY/Servlet?action=misPedidos">Mis Pedidos [<%=numItems%>]</a></li>
 					</ul>
 				</div>
 			</div>

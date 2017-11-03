@@ -1,5 +1,5 @@
 <%@page
-	import="modelo.Usuarios, modelo.HibernateUtil, org.hibernate.Session, java.util.ArrayList, modelo.Categorias, modelo.Productos"%>
+	import="modelo.Usuarios, modelo.HibernateUtil, org.hibernate.Session,  modelo.ProductoCarrito, java.util.HashMap, java.util.ArrayList, modelo.Categorias, modelo.Productos"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -25,9 +25,20 @@
 		Session datos = HibernateUtil.getSessionFactory().openSession();
 		String idCategoria = request.getParameter("id");
 
+		@SuppressWarnings("unchecked")
+		HashMap<Integer, ProductoCarrito> carro = (HashMap<Integer, ProductoCarrito>) atrsesion
+				.getAttribute("carrito");
+
 		if (user != null) {
 
 			Usuarios usuario = (Usuarios) datos.get(Usuarios.class, user);
+
+			int numItems = 0;
+
+			if (carro != null) {
+				numItems = carro.size();
+
+			}
 	%>
 
 	<header> <!-- Navigation --> <nav
@@ -50,7 +61,8 @@
 					href="/CANARYWHEY/Servlet?action=Productos">Productos<span
 						class="sr-only">(current)</span></a></li>
 				<li class="nav-item"><a class="nav-link"
-					href="/CANARYWHEY/Servlet?action=misPedidos">Mis Pedidos</a></li>
+					href="/CANARYWHEY/Servlet?action=misPedidos">Mis Pedidos [<%=numItems%>]
+				</a></li>
 			</ul>
 		</div>
 	</div>

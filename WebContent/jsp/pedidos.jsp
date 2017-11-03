@@ -60,13 +60,19 @@
 		Session datos = HibernateUtil.getSessionFactory().openSession();
 		Usuarios usuario = (Usuarios) datos.get(Usuarios.class, user);
 
-		HttpSession sesion = request.getSession();
 		String idProducto = request.getParameter("proId");
 
 		@SuppressWarnings("unchecked")
-		HashMap<Integer, ProductoCarrito> carro = (HashMap<Integer, ProductoCarrito>) sesion
+		HashMap<Integer, ProductoCarrito> carro = (HashMap<Integer, ProductoCarrito>) atrsesion
 				.getAttribute("carrito");
 
+		int numItems = 0;
+
+		if (carro != null) {
+			numItems = carro.size();
+
+			atrsesion.setAttribute("numItems", carro.size());
+		}
 		//pageContext.setAttribute("arrayCarrito", carro);
 	%>
 
@@ -91,7 +97,8 @@
 					href="/CANARYWHEY/Servlet?action=Productos">Productos<span
 						class="sr-only">(current)</span></a></li>
 				<li class="nav-item active"><a class="nav-link"
-					href="/CANARYWHEY/Servlet?action=misPedidos">Mis Pedidos</a></li>
+					href="/CANARYWHEY/Servlet?action=misPedidos">Mis Pedidos [<%=numItems%>]
+				</a></li>
 			</ul>
 		</div>
 	</div>
@@ -100,7 +107,8 @@
 
 	<%
 		if (carro != null) {
-			Set<Integer> claves = carro.keySet();
+			if (carro.size() > 0) {
+				Set<Integer> claves = carro.keySet();
 	%>
 
 
@@ -120,11 +128,11 @@
 
 			<%
 				int subtotal = 0;
-					int total = 0;
+						int total = 0;
 
-					for (Integer clave : claves) {
-						subtotal = carro.get(clave).getProducto().getPrecio() * carro.get(clave).getCatidad();
-						total += subtotal;
+						for (Integer clave : claves) {
+							subtotal = carro.get(clave).getProducto().getPrecio() * carro.get(clave).getCatidad();
+							total += subtotal;
 			%>
 
 			<tbody>
@@ -145,27 +153,27 @@
 
 					<form action="Servlet?action=carrito" method="post" id="formulario"
 						name="form">
-					<td data-th="Price"><%=carro.get(clave).getProducto().getPrecio()%>&euro;</td>
-					<td data-th="Quantity"><input type="hidden" name="proId"
-						value="<%=carro.get(clave).getProducto().getCodigoProducto()%>" />
-						<input name="cantidad" type="number"
-						class="form-control text-center"
-						value="<%=carro.get(clave).getCatidad()%>" /></td>
-					<td data-th="Subtotal" class="text-center" id="subtotal"><%=subtotal%>&euro;</td>
-					<td class="actions" data-th=""><input type="hidden"
-						name="borrar" id="borrame"
-						value="<%=carro.get(clave).getProducto().getCodigoProducto()%>" />
-						<%
-							out.println(carro.get(clave).getProducto().getCodigoProducto());
-						%>
-						<button type="submit" name="actualizar"
-							class="btn btn-info btn-sm">
-							<i class="fa fa-refresh"></i>
-						</button>
-						<button type="submit" id="btnEliminar"
-							class="btn btn-danger btn-sm">
-							<i class="fa fa-trash-o"></i>
-						</button></td>
+						<td data-th="Price"><%=carro.get(clave).getProducto().getPrecio()%>&euro;</td>
+						<td data-th="Quantity"><input type="hidden" name="proId"
+							value="<%=carro.get(clave).getProducto().getCodigoProducto()%>" />
+							<input name="cantidad" type="number"
+							class="form-control text-center"
+							value="<%=carro.get(clave).getCatidad()%>" /></td>
+						<td data-th="Subtotal" class="text-center" id="subtotal"><%=subtotal%>&euro;</td>
+						<td class="actions" data-th=""><input type="hidden"
+							name="borrar" id="borrame"
+							value="<%=carro.get(clave).getProducto().getCodigoProducto()%>" />
+							<%
+								out.println(carro.get(clave).getProducto().getCodigoProducto());
+							%>
+							<button type="submit" name="actualizar"
+								class="btn btn-info btn-sm">
+								<i class="fa fa-refresh"></i>
+							</button>
+							<button type="submit" id="btnEliminar"
+								class="btn btn-danger btn-sm">
+								<i class="fa fa-trash-o"></i>
+							</button></td>
 					</form>
 				</tr>
 			</tbody>
@@ -196,7 +204,12 @@
 	<%
 		} else {
 	%>
-	<div id="carrito">El carrito está vacío!!</div>
+	<div id="carrito" style="text-align: center;"><h1>El carrito está vacío!!</h1></div>
+	<%
+		}
+		} else {
+	%>
+	<div id="carrito" style="text-align: center;"><h1>El carrito está vacío!!</h1></div>
 	<%
 		}
 	%>

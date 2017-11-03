@@ -1,13 +1,9 @@
 package controlador;
 
-import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -88,10 +84,12 @@ public class Servlet extends HttpServlet {
 				break;
 			case "InicioSesion":
 				if (request.getParameter("nombre") != null) {
-					if (iniciarSesion(request))
+					if (iniciarSesion(request)) {
 						url = base + "bienvenidaLogueado.jsp";
-					else
+					} else {
+						request.setAttribute("error", "Usuario o contraseña incorrectos");
 						url = base + "acceder.jsp";
+					}
 				} else {
 					url = base + "bienvenidaLogueado.jsp";
 				}
@@ -243,7 +241,6 @@ public class Servlet extends HttpServlet {
 				}
 			case "carrito":
 				if (request.getParameter("actualizar") != null) {
-					System.out.println("dentrooooo----------");
 					actualizarCarrito(request);
 					url = base + "pedidos.jsp";
 					break;
@@ -257,12 +254,22 @@ public class Servlet extends HttpServlet {
 				url = base + "pedidos.jsp";
 				break;
 
+			case "Checkout":
+				if (request.getParameter("volver") != null) {
+					checkout(request);
+					url = base + "checkout.jsp";
+				}
+				url = base + "checkout.jsp";
+				break;
+
 			}
 
 		}
 		request.getRequestDispatcher(url).forward(request, response);
 
 	}
+
+	
 
 	public void añadirUsuarios(HttpServletRequest request) {
 
@@ -422,21 +429,20 @@ public class Servlet extends HttpServlet {
 	}
 
 	public void borrarProductosCarrito(HttpServletRequest request) {
-		
+
 		HttpSession carritoSesion = request.getSession();
 
 		@SuppressWarnings("unchecked")
 		HashMap<Integer, ProductoCarrito> carrito = (HashMap<Integer, ProductoCarrito>) carritoSesion
 				.getAttribute("carrito");
-		
+
 		int idProducto = Integer.parseInt(request.getParameter("proId"));
 		System.err.println(idProducto);
 		System.out.println(carrito.get(idProducto).getProducto().getNombre());
-		
-		carrito.remove(idProducto);
-		
-		carritoSesion.setAttribute("carrito", carrito);
 
+		carrito.remove(idProducto);
+
+		carritoSesion.setAttribute("carrito", carrito);
 
 	}
 
@@ -586,6 +592,28 @@ public class Servlet extends HttpServlet {
 
 		producto.setCatidad(catidad);
 
+	}
+	
+	public void checkout(HttpServletRequest request) {
+	
+		String nombre = request.getParameter("nombre");
+		String apellidos = request.getParameter("apellidos");
+		String direccion = request.getParameter("direccion");
+		String ciudad = request.getParameter("ciudad");
+		String telefono = request.getParameter("telefono");
+		String codigoPostal = request.getParameter("codigoPostal");
+		String email = request.getParameter("email");
+		String num_tarjeta = request.getParameter("tarjeta");
+	
+		
+		
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		session.beginTransaction();
+
+		session.save(""); // <|--- Aqui guardamos el objeto en la base de datos.
+
+		session.getTransaction().commit();
+		session.close();
 	}
 
 }

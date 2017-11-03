@@ -60,23 +60,6 @@ $(document).ready(function () {
 
 </script>
 
-<style>
-.my-error-class{
-    color:red;
-    font-weight: bold;
-     margin-left: 1.5%;
-
-    
-}
-.my-valid-class {
-    color:green;
-      font-weight: bold;
-}
-</style>
-
-
-
-
 
 </head>
 <body>

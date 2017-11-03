@@ -1,12 +1,14 @@
-.my-error-class {
-	color: red;
-	font-weight: bold;
+.my-error-class{
+    color:red;
+    font-weight: bold;
+    margin-left: 1.5%;
+    
+}
+.my-valid-class {
+    color:green;
+    font-weight: bold;
 }
 
-.my-valid-class {
-	color: green;
-	font-weight: bold;
-}
 
 #añadirProductos {
 	margin-top: 7%;

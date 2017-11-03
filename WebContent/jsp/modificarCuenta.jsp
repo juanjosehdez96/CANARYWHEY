@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <%@page
-	import="modelo.Usuarios, modelo.HibernateUtil, org.hibernate.Session, java.io.File"%>
+	import="modelo.Usuarios, modelo.HibernateUtil, org.hibernate.Session, modelo.ProductoCarrito, java.util.HashMap, java.io.File"%>
 <head>
 
 <title>CANARYWHEY</title>
@@ -31,6 +31,11 @@ $(document).ready(function () {
 	       return this.optional( element ) || nameregex.test( value );
 	   }); 
 	   
+	   var fecha = /^([0-2][0-9]|3[0-1])(\/|-)(0[1-9]|1[0-2])\2(\d{4})$/;
+
+		$.validator.addMethod("validfecha", function( value, element ) {
+		       return this.optional( element ) || fecha.test( value );
+		}); 
 	   
 	   var useregex = /^[a-z\d_]{2,15}$/i;  
 
@@ -83,6 +88,7 @@ $(document).ready(function () {
 			        apellidos: { required: true, validname: true},
 			        email: { required:true, validemail: true},
 			        contrasena: { required: true, minlength: 6},
+			        fechaNacimiento: { required: true, validfecha:true},
 			        file: { required: true}
 			        },
 			      
@@ -92,6 +98,7 @@ $(document).ready(function () {
 			        apellidos: "Apellidos no válidos.",
 			        email : "Formato de email incorrecto.",
 			        contrasena : "La contraseña debe tener minimo 6 caracteres.",
+			        fechaNacimiento: "Fecha incorrecta",
 			        file: " / Tipo de archivo no válido."
 			    
 			    	}
@@ -114,6 +121,18 @@ $(document).ready(function () {
 
 		Session datos = HibernateUtil.getSessionFactory().openSession();
 		Usuarios usuario = (Usuarios) datos.get(Usuarios.class, user);
+		
+		@SuppressWarnings("unchecked")
+		HashMap<Integer, ProductoCarrito> carro = (HashMap<Integer, ProductoCarrito>) atrsesion
+				.getAttribute("carrito");
+
+		int numItems = 0;
+
+		if (carro != null) {
+			numItems = carro.size();
+			
+		}
+
 	%>
 
 	<header>
@@ -139,7 +158,7 @@ $(document).ready(function () {
 						<li class="nav-item"><a class="nav-link"
 							href="/CANARYWHEY/Servlet?action=Productos">Productos</a></li>
 						<li class="nav-item"><a class="nav-link"
-							href="/CANARYWHEY/Servlet?action=misPedidos">Mis Pedidos</a></li>
+							href="/CANARYWHEY/Servlet?action=misPedidos">Mis Pedidos [<%=numItems%>]</a></li>
 					</ul>
 				</div>
 			</div>

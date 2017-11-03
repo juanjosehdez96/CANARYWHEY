@@ -1,5 +1,5 @@
 <%@page
-	import="modelo.Usuarios, modelo.HibernateUtil, org.hibernate.Session, java.util.ArrayList, modelo.Categorias, modelo.Productos"%>
+	import="modelo.Usuarios, modelo.HibernateUtil, modelo.ProductoCarrito, java.util.HashMap, org.hibernate.Session, java.util.ArrayList, modelo.Categorias, modelo.Productos"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -54,10 +54,24 @@
 		Session datos = HibernateUtil.getSessionFactory().openSession();
 		String idCategoria = request.getParameter("id");
 		String imageURL = "imgsProductos/";
+		
+		@SuppressWarnings("unchecked")
+		HashMap<Integer, ProductoCarrito> carro = (HashMap<Integer, ProductoCarrito>) atrsesion
+				.getAttribute("carrito");
 
 		if (user != null) {
 
 			Usuarios usuario = (Usuarios) datos.get(Usuarios.class, user);
+			
+			
+
+			int numItems = 0;
+
+			if (carro != null) {
+				numItems = carro.size();
+				
+			}
+	
 	%>
 
 	<header> <!-- Navigation --> <nav
@@ -80,7 +94,7 @@
 					href="/CANARYWHEY/Servlet?action=Productos">Productos<span
 						class="sr-only">(current)</span></a></li>
 				<li class="nav-item"><a class="nav-link"
-					href="/CANARYWHEY/Servlet?action=misPedidos">Mis Pedidos</a></li>
+					href="/CANARYWHEY/Servlet?action=misPedidos">Mis Pedidos [<%=numItems%>]</a></li>
 			</ul>
 		</div>
 	</div>
@@ -191,26 +205,25 @@
 						Usuarios usuario = (Usuarios) datos.get(Usuarios.class, user);
 								if (usuario.getRol().equals("Administrador")) {
 					%>
-					<input type="hidden" name="btnEliminar"/>
-					<input style="display: block; margin-top: 5%;" type="submit"
+					<input type="hidden" name="btnEliminar" /> <input
+						style="display: block; margin-top: 5%;" type="submit"
 						class="btn btn-primary" value="Eliminar Producto" id="btnEliminar" />
 					<input style="display: block; margin-top: 5%;" type="button"
 						class="btn btn-primary" value="Modificar Producto"
 						onclick="window.location.href='/CANARYWHEY/Servlet?action=modificarProductos&proId=<%=idProducto%>';" />
 
-					<input type="button" style="float: right; margin-left: 5%;"
-						onclick="window.location.href='/CANARYWHEY/Servlet?action=Productos';"
-						value="Volver" class="btn btn-primary" />
-
-
 					<%
 						}
-							}
+					}
 					%>
 
 				</div>
 			</form>
 		</div>
+		
+		<input type="button" style="float: right; margin-left: 5%;"
+						onclick="window.location.href='/CANARYWHEY/Servlet?action=Productos';"
+						value="Volver" class="btn btn-primary" />
 	</div>
 
 	<%

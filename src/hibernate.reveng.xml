@@ -9,6 +9,6 @@
 <table-filter match-catalog="canarywhey" match-name="categorias"/>
   <table-filter match-catalog="canarywhey" match-name="pedidos"/>
   <table-filter match-catalog="canarywhey" match-name="productos"/>
-  <table-filter match-catalog="canarywhey" match-name="productos_pedido"/>
+  <table-filter match-catalog="canarywhey" match-name="detalles_producto"/>
   <table-filter match-catalog="canarywhey" match-name="usuarios"/>
 </hibernate-reverse-engineering>

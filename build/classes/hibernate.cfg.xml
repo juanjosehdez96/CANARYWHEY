@@ -16,7 +16,7 @@
     	 <mapping class="modelo.Categorias" package="modelo" resource="/modelo.Categorias.hbm.xml"/>
     	 <mapping class="modelo.Pedidos" package="modelo" resource="/modelo.Pedidos.hbm.xml"/>
     	 <mapping class="modelo.Productos" package="modelo" resource="/modelo.Productos.hbm.xml"/>
-    	 <mapping class="modelo.ProductosPedido" package="modelo" resource="/modelo.ProductosPedido.hbm.xml"/>
+    	 <mapping class="modelo.DetallesPedido" package="modelo" resource="/modelo.DetallesPedido.hbm.xml"/>
     	 
     	
     </session-factory>
