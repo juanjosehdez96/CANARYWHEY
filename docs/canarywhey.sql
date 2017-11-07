@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-10-2017 a las 18:58:17
+-- Tiempo de generación: 07-11-2017 a las 17:12:58
 -- Versión del servidor: 10.1.21-MariaDB
 -- Versión de PHP: 5.6.31
 
@@ -45,15 +45,53 @@ INSERT INTO `categorias` (`codigo_categoria`, `nombre`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `detalles_pedido`
+--
+
+CREATE TABLE `detalles_pedido` (
+  `id` int(255) NOT NULL,
+  `codigo_pedido` int(255) NOT NULL,
+  `codigo_producto` int(255) NOT NULL,
+  `nombre_producto` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
+  `precio` int(255) NOT NULL,
+  `cantidad` int(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `detalles_pedido`
+--
+
+INSERT INTO `detalles_pedido` (`id`, `codigo_pedido`, `codigo_producto`, `nombre_producto`, `precio`, `cantidad`) VALUES
+(1, 1, 1, 'Syntha-6', 65, 2),
+(2, 1, 2, 'Mutant Mass', 55, 4),
+(3, 1, 3, 'BCAA´S', 25, 3),
+(4, 2, 1, 'Syntha-6', 65, 3),
+(5, 2, 4, 'Isopro', 60, 2);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `pedidos`
 --
 
 CREATE TABLE `pedidos` (
   `codigo_pedido` int(255) NOT NULL,
-  `nombre_usuario` int(255) NOT NULL,
+  `nombre_usuario` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
   `fecha_pedido` date NOT NULL,
-  `hora_pedido` time(6) NOT NULL
+  `hora_pedido` time(6) NOT NULL,
+  `telefono` int(9) NOT NULL,
+  `num_tarjeta` text COLLATE utf8_spanish_ci NOT NULL,
+  `direccion` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
+  `codigo_postal` int(5) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `pedidos`
+--
+
+INSERT INTO `pedidos` (`codigo_pedido`, `nombre_usuario`, `fecha_pedido`, `hora_pedido`, `telefono`, `num_tarjeta`, `direccion`, `codigo_postal`) VALUES
+(1, 'cliente', '2017-11-06', '08:50:35.000000', 600213203, '4177500081954711', 'Calle tecen', 35009),
+(2, 'cliente', '2017-11-06', '10:18:04.000000', 654621458, '4177458254458', 'calle el rincon', 35002);
 
 -- --------------------------------------------------------
 
@@ -74,22 +112,10 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`codigo_producto`, `nombre`, `codigo_categoria`, `precio`, `stock`) VALUES
-(1, 'Syntha-6   ', 1, 65, 100),
-(2, 'Mutant Mass', 2, 55, 2),
+(1, 'Syntha-6', 1, 65, 100),
+(2, 'Mutant Mass', 2, 55, 20),
 (3, 'BCAA´S', 3, 25, 60),
 (4, 'Isopro', 1, 60, 80);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `productos_pedido`
---
-
-CREATE TABLE `productos_pedido` (
-  `codigo` int(255) NOT NULL,
-  `codigo_pedido` int(255) NOT NULL,
-  `codigo_producto` int(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------
 
@@ -112,7 +138,7 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`rol`, `nombre`, `apellidos`, `nombre_usuario`, `contraseña`, `email`, `fecha_nacimiento`) VALUES
-('Administrador', 'juanjo  ', 'hernandez', 'admin', '25f9e794323b453885f5181f1b624d0b', 'juanjose@gmail.com', '1994-10-19'),
+('Administrador', 'Juanjo', 'Hernandez Hernandez', 'admin', '25f9e794323b453885f5181f1b624d0b', 'juanjose@gmail.com', '1995-11-04'),
 ('Cliente', 'juan', 'hernandez', 'cliente', 'e10adc3949ba59abbe56e057f20f883e', 'juan@gmail.com', '1996-12-03');
 
 --
@@ -126,6 +152,12 @@ ALTER TABLE `categorias`
   ADD PRIMARY KEY (`codigo_categoria`);
 
 --
+-- Indices de la tabla `detalles_pedido`
+--
+ALTER TABLE `detalles_pedido`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
@@ -136,12 +168,6 @@ ALTER TABLE `pedidos`
 --
 ALTER TABLE `productos`
   ADD PRIMARY KEY (`codigo_producto`);
-
---
--- Indices de la tabla `productos_pedido`
---
-ALTER TABLE `productos_pedido`
-  ADD PRIMARY KEY (`codigo`);
 
 --
 -- Indices de la tabla `usuarios`
@@ -162,22 +188,22 @@ ALTER TABLE `categorias`
   MODIFY `codigo_categoria` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT de la tabla `detalles_pedido`
+--
+ALTER TABLE `detalles_pedido`
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `codigo_pedido` int(255) NOT NULL AUTO_INCREMENT;
+  MODIFY `codigo_pedido` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
   MODIFY `codigo_producto` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT de la tabla `productos_pedido`
---
-ALTER TABLE `productos_pedido`
-  MODIFY `codigo` int(255) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
