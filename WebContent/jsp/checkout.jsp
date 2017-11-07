@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <%@page
-	import="modelo.Usuarios, modelo.HibernateUtil, org.hibernate.Session, java.util.ArrayList, modelo.Categorias, modelo.Productos"%>
+	import="modelo.Usuarios, modelo.HibernateUtil, modelo.ProductoCarrito, java.util.HashMap, org.hibernate.Session, java.util.ArrayList, modelo.Categorias, modelo.Productos"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <head>
 
@@ -17,82 +17,139 @@
 
 
 <script>
+	$(document)
+			.ready(
+					function() {
+						$("#btnGuardar")
+								.on(
+										"click",
+										function() {
 
-$(document).ready(function () {
-	$("#btnGuardar").on("click", function() {
-		
-		 var nameregex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/i;
-		   
-		   $.validator.addMethod("validname", function( value, element ) {
-		       return this.optional( element ) || nameregex.test( value );
-		   }); 
-		   
-		 
-		   
-		   
-		   var useregex = /^[a-z\d_]{2,15}$/i;  
+											var nameregex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/i;
 
+											$.validator
+													.addMethod(
+															"validname",
+															function(value,
+																	element) {
+																return this
+																		.optional(element)
+																		|| nameregex
+																				.test(value);
+															});
 
-		   $.validator.addMethod("validuser", function( value, element ) {
-		       return this.optional( element ) || useregex.test( value );
-		   }); 
-		   
-		   var n_tarjeta = /^(?:4\d([\- ])?\d{6}\1\d{5}|(?:4\d{3}|5[1-5]\d{2}|6011)([\- ])?\d{4}\2\d{4}\2\d{4})$/i;
-		   
-		   $.validator.addMethod("validtarjeta", function( value, element ) {
-		       return this.optional( element ) || n_tarjeta.test( value );
-		   }); 
-		   
-		   var codigoPostal = /^(5[0-2]|[0-4][0-9])[0-9]{3}$/i;
+											var useregex = /^[a-z\d_]{2,15}$/i;
 
-		   $.validator.addMethod("validcodigo", function( value, element ) {
-		       return this.optional( element ) || codigoPostal.test( value );
-		   });
-		   
-		   // valid email pattern
-		   var eregex = /^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$/i;
+											$.validator
+													.addMethod(
+															"validuser",
+															function(value,
+																	element) {
+																return this
+																		.optional(element)
+																		|| useregex
+																				.test(value);
+															});
 
-		   
-		   $.validator.addMethod("validemail", function( value, element ) {
-		       return this.optional( element ) || eregex.test( value );
-		   });
-	   
-	   $("#formulario").validate({
-		   
-		   errorClass: "my-error-class",
-		   validClass: "my-valid-class",
-		    
-		    rules: {
-		        nombre: {  required: true, validname: true},
-		        apellidos: {  required: true, validname: true},
-		        direccion: { required: true, validname:true},
-		        ciudad: { required:true, validname: true},
-		        codigoPostal: { required:true, validcodigo: true},
-		        telefono: {required: true, digits: true},
-		        email: { required:true, validemail:true},
-		        tarjeta: { required:true, validtarjeta:true}
-		      
-		       
-		    },
-		    messages: {
-		        nombre: "Nombre no válido.",
-		        apellidos: "Apellidos no válidos",
-		        direccion: "Introduzca una dirección válida.",
-		        ciudad: "Introduzca una ciudad válida.",
-		        codigoPostal: "Código postal incorrecto.",
-		        telefono: "Número de teléfono incorrecto",
-		        email: "Formato no válido.",
-		        tarjeta: "Formato incorrecto."
-		      
-		        
-		    
-		    }});  
-		
-		});
+											var n_tarjeta = /^(?:4\d([\- ])?\d{6}\1\d{5}|(?:4\d{3}|5[1-5]\d{2}|6011)([\- ])?\d{4}\2\d{4}\2\d{4})$/i;
 
-});
+											$.validator
+													.addMethod(
+															"validtarjeta",
+															function(value,
+																	element) {
+																return this
+																		.optional(element)
+																		|| n_tarjeta
+																				.test(value);
+															});
 
+											var codigoPostal = /^(5[0-2]|[0-4][0-9])[0-9]{3}$/i;
 
+											$.validator
+													.addMethod(
+															"validcodigo",
+															function(value,
+																	element) {
+																return this
+																		.optional(element)
+																		|| codigoPostal
+																				.test(value);
+															});
+
+											// valid email pattern
+											var eregex = /^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$/i;
+
+											$.validator
+													.addMethod(
+															"validemail",
+															function(value,
+																	element) {
+																return this
+																		.optional(element)
+																		|| eregex
+																				.test(value);
+															});
+
+											$("#formulario")
+													.validate(
+															{
+
+																errorClass : "my-error-class",
+																validClass : "my-valid-class",
+
+																rules : {
+																	nombre : {
+																		required : true,
+																		validname : true
+																	},
+																	apellidos : {
+																		required : true,
+																		validname : true
+																	},
+																	direccion : {
+																		required : true,
+																		validname : true
+																	},
+																	ciudad : {
+																		required : true,
+																		validname : true
+																	},
+																	codigoPostal : {
+																		required : true,
+																		validcodigo : true
+																	},
+																	telefono : {
+																		required : true,
+																		digits : true,
+																		minlength : 9
+																	},
+																	email : {
+																		required : true,
+																		validemail : true
+																	},
+																	tarjeta : {
+																		required : true,
+																		validtarjeta : true
+																	}
+
+																},
+																messages : {
+																	nombre : "Nombre no válido.",
+																	apellidos : "Apellidos no válidos",
+																	direccion : "Introduzca una dirección válida.",
+																	ciudad : "Introduzca una ciudad válida.",
+																	codigoPostal : "Código postal incorrecto.",
+																	telefono : "Número de teléfono incorrecto",
+																	email : "Formato no válido.",
+																	tarjeta : "Formato incorrecto."
+
+																}
+															});
+
+										});
+
+					});
 </script>
 
 </head>
@@ -100,10 +157,21 @@ $(document).ready(function () {
 
 	<%
 		HttpSession atrsesion = request.getSession();
-			String user = (String) atrsesion.getAttribute("nombreDeUsuario");
+		String user = (String) atrsesion.getAttribute("nombreDeUsuario");
 
 		Session datos = HibernateUtil.getSessionFactory().openSession();
 		Usuarios usuario = (Usuarios) datos.get(Usuarios.class, user);
+
+		@SuppressWarnings("unchecked")
+		HashMap<Integer, ProductoCarrito> carro = (HashMap<Integer, ProductoCarrito>) atrsesion
+				.getAttribute("carrito");
+
+		int numItems = 0;
+
+		if (carro != null) {
+			numItems = carro.size();
+
+		}
 	%>
 
 	<header>
@@ -129,17 +197,41 @@ $(document).ready(function () {
 						<li class="nav-item active"><a class="nav-link"
 							href="/CANARYWHEY/Servlet?action=Productos">Productos</a></li>
 						<li class="nav-item"><a class="nav-link"
-							href="/CANARYWHEY/Servlet?action=misPedidos">Mis Pedidos</a></li>
+							href="/CANARYWHEY/Servlet?action=carrito">Carrito [<%=numItems%>]
+						</a></li>
+						<li class="nav-item "><a class="nav-link"
+							href="/CANARYWHEY/Servlet?action=pedidos">Mis Pedidos </a></li>
 					</ul>
 				</div>
 			</div>
 		</nav>
 	</header>
 
+	<%
+		String check = (String) request.getAttribute("checkout");
 
+		if (check != null) {
+	%>
+	<div style="text-align: center; margin: auto; margin-top: 8%">
+		<h1 style="color: green"><%=check%></h1>
+		<h3>
+			Tu número de pedido es:
+			<%=request.getAttribute("codigoPedido")%></h3>
+		<div style="padding-top: 2%">
+			<a href="/CANARYWHEY/Servlet?action=Productos"
+				class="btn btn-warning"> <i class="fa fa-angle-left"></i>Continuar
+				comprando
+			</a>
+		</div>
+	</div>
+
+
+	<%
+		} else {
+	%>
 
 	<div id="table" class="table-editable" style="width: 100%;">
-		<form action="Servlet?action=addProductos" method="post" enctype="multipart/form-data" id="formulario">
+		<form action="Servlet?action=Checkout" method="post" id="formulario">
 
 			<span class="table-add glyphicon glyphicon-plus"></span>
 			<table class="table">
@@ -169,43 +261,49 @@ $(document).ready(function () {
 					<tr>
 						<th scope="row">4</th>
 						<td>Ciudad:</td>
-						<td><input type="text" name="ciudad"/></td>
+						<td><input type="text" name="ciudad" /></td>
 
 					</tr>
-					
+
 					<tr>
 						<th scope="row">5</th>
 						<td>Teléfono:</td>
-						<td><input type="text" name="telefono"/></td>
+						<td><input type="text" name="telefono" /></td>
 
 					</tr>
 					<tr>
 						<th scope="row">6</th>
 						<td>Codigo postal:</td>
-						<td><input type="text" name="codigoPostal"/></td>
+						<td><input type="text" name="codigoPostal" /></td>
 					</tr>
 
 					<tr>
 						<th scope="row">7</th>
 						<td>Correo electrónico:</td>
-						<td><input type="text" name="email"/></td>
+						<td><input type="text" name="email" /></td>
 					</tr>
-					
+
 					<tr>
 						<th scope="row">8</th>
 						<td>Número de tarjeta:</td>
-						<td><input type="text" name="tarjeta"/></td>
+						<td><input type="text" name="tarjeta" /></td>
 					</tr>
 				</tbody>
 			</table>
-			<input type="submit" style="margin-left: 30%" value="Guardar Cambios"
-				name="guardarProductos" class="btn btn-primary" id="btnGuardar"/> 
-				<input	type="submit" style="margin-left: 20%" value="Volver" name="volver" 
-				class="btn btn-primary" />
+			<input type="submit" style="margin-left: 30%; margin-bottom: 7%"
+				value="Comprar" name="comprar" class="btn btn-primary"
+				id="btnGuardar" /> <input
+				onclick="window.location.href='/CANARYWHEY/Servlet?action=Pedidos';"
+				type="button" style="margin-left: 20%; margin-bottom: 7%"
+				value="Volver" name="volver" class="btn btn-primary" />
 
 		</form>
 	</div>
 
+
+	<%
+		}
+	%>
 
 
 	<footer>

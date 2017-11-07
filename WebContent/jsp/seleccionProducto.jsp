@@ -54,7 +54,7 @@
 		Session datos = HibernateUtil.getSessionFactory().openSession();
 		String idCategoria = request.getParameter("id");
 		String imageURL = "imgsProductos/";
-		
+
 		@SuppressWarnings("unchecked")
 		HashMap<Integer, ProductoCarrito> carro = (HashMap<Integer, ProductoCarrito>) atrsesion
 				.getAttribute("carrito");
@@ -62,16 +62,13 @@
 		if (user != null) {
 
 			Usuarios usuario = (Usuarios) datos.get(Usuarios.class, user);
-			
-			
 
 			int numItems = 0;
 
 			if (carro != null) {
 				numItems = carro.size();
-				
+
 			}
-	
 	%>
 
 	<header> <!-- Navigation --> <nav
@@ -94,7 +91,10 @@
 					href="/CANARYWHEY/Servlet?action=Productos">Productos<span
 						class="sr-only">(current)</span></a></li>
 				<li class="nav-item"><a class="nav-link"
-					href="/CANARYWHEY/Servlet?action=misPedidos">Mis Pedidos [<%=numItems%>]</a></li>
+					href="/CANARYWHEY/Servlet?action=carrito">Carrito [<%=numItems%>]
+				</a></li>
+				<li class="nav-item "><a class="nav-link"
+					href="/CANARYWHEY/Servlet?action=pedidos">Mis Pedidos </a></li>
 			</ul>
 		</div>
 	</div>
@@ -195,7 +195,7 @@
 				if (user != null) {
 			%>
 
-			<form action="Servlet?action=Pedidos&proId=<%=idProducto%>"
+			<form action="Servlet?action=añadirCarrito&proId=<%=idProducto%>"
 				method="post" name="form">
 				<div id="botonesProductos">
 					<input type="submit" class="btn btn-primary"
@@ -214,16 +214,16 @@
 
 					<%
 						}
-					}
+							}
 					%>
 
 				</div>
 			</form>
 		</div>
-		
+
 		<input type="button" style="float: right; margin-left: 5%;"
-						onclick="window.location.href='/CANARYWHEY/Servlet?action=Productos';"
-						value="Volver" class="btn btn-primary" />
+			onclick="window.location.href='/CANARYWHEY/Servlet?action=Productos';"
+			value="Volver" class="btn btn-primary" />
 	</div>
 
 	<%

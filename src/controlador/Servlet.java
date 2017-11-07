@@ -5,9 +5,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 import javax.persistence.Query;
 import javax.servlet.ServletException;
@@ -22,10 +24,11 @@ import javax.servlet.http.Part;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.hibernate.Session;
 
-import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.image.Image;
 import modelo.Categorias;
+import modelo.DetallesPedido;
 import modelo.HibernateUtil;
+import modelo.ListarPedidos;
+import modelo.Pedidos;
 import modelo.ProductoCarrito;
 import modelo.Productos;
 import modelo.Usuarios;
@@ -38,29 +41,16 @@ import modelo.Usuarios;
 public class Servlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
 	public Servlet() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doPost(request, response);
 
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
@@ -115,15 +105,16 @@ public class Servlet extends HttpServlet {
 				break;
 
 			case "Cuenta":
-				if (request.getParameter("borrarCuenta") != null) {
-					eliminarCuenta(request);
-					url = base + "bienvenida.jsp";
+				if (request.getParameter("modificar") != null) {
+					url = base + "modificarCuenta.jsp";
+					break;
 				} else {
-
-					if (request.getParameter("modificar") != null)
-						url = base + "modificarCuenta.jsp";
-					else
+					if (request.getParameter("borrarCuenta") != null) {
+						eliminarCuenta(request);
+						url = base + "bienvenida.jsp";
+					} else {
 						url = base + "miCuenta.jsp";
+					}
 				}
 				break;
 
@@ -149,10 +140,10 @@ public class Servlet extends HttpServlet {
 				url = base + "seleccionProducto.jsp";
 				break;
 
-			case "Pedidos":
+			case "añadirCarrito":
 				if (request.getParameter("btnCarrito") != null) {
 					añadirProductosCarrito(request);
-					url = base + "pedidos.jsp";
+					url = base + "carrito.jsp";
 					break;
 				}
 				if (request.getParameter("btnEliminar") != null) {
@@ -160,10 +151,6 @@ public class Servlet extends HttpServlet {
 					response.sendRedirect("/CANARYWHEY/Servlet?action=Productos");
 					return;
 				}
-
-			case "misPedidos":
-				url = base + "pedidos.jsp";
-				break;
 
 			case "addProductos":
 				String user = (String) atrsesion.getAttribute("nombreDeUsuario");
@@ -242,24 +229,40 @@ public class Servlet extends HttpServlet {
 			case "carrito":
 				if (request.getParameter("actualizar") != null) {
 					actualizarCarrito(request);
-					url = base + "pedidos.jsp";
+					url = base + "carrito.jsp";
 					break;
 				}
 				if (request.getParameter("borrar") != null) {
 					borrarProductosCarrito(request);
-					url = base + "pedidos.jsp";
+					url = base + "carrito.jsp";
 					break;
 				}
 
-				url = base + "pedidos.jsp";
+				url = base + "carrito.jsp";
 				break;
 
 			case "Checkout":
-				if (request.getParameter("volver") != null) {
-					checkout(request);
+				if (request.getParameter("comprar") != null) {
+					if (checkout(request)) {
+						request.setAttribute("checkout", "La compra se ha realizado con éxito");
+						atrsesion.setAttribute("carrito", null);
+						url = base + "checkout.jsp";
+					} else {
+						request.setAttribute("checkout", "Error al realizar la compra");
+					}
+
+				} else {
 					url = base + "checkout.jsp";
 				}
-				url = base + "checkout.jsp";
+				break;
+
+			case "pedidos":
+				if (mostrarPedidos(request)) {
+					mostrarPedidos(request);
+					url = base + "pedidos.jsp";
+				} else {
+					url = base + "pedidos.jsp";
+				}
 				break;
 
 			}
@@ -268,8 +271,6 @@ public class Servlet extends HttpServlet {
 		request.getRequestDispatcher(url).forward(request, response);
 
 	}
-
-	
 
 	public void añadirUsuarios(HttpServletRequest request) {
 
@@ -593,27 +594,82 @@ public class Servlet extends HttpServlet {
 		producto.setCatidad(catidad);
 
 	}
-	
-	public void checkout(HttpServletRequest request) {
-	
-		String nombre = request.getParameter("nombre");
-		String apellidos = request.getParameter("apellidos");
+
+	public boolean checkout(HttpServletRequest request) {
+
+		HttpSession sesion = request.getSession();
+		@SuppressWarnings("unchecked")
+		HashMap<Integer, ProductoCarrito> carro = (HashMap<Integer, ProductoCarrito>) sesion.getAttribute("carrito");
+
+		Set<Integer> claves = carro.keySet();
+
+		String nombre = (String) sesion.getAttribute("nombreDeUsuario");
 		String direccion = request.getParameter("direccion");
-		String ciudad = request.getParameter("ciudad");
-		String telefono = request.getParameter("telefono");
-		String codigoPostal = request.getParameter("codigoPostal");
-		String email = request.getParameter("email");
+
+		int telefono = Integer.parseInt(request.getParameter("telefono"));
+		int codigoPostal = Integer.parseInt(request.getParameter("codigoPostal"));
 		String num_tarjeta = request.getParameter("tarjeta");
-	
-		
-		
+
+		LocalDate fechaPedido = LocalDate.now();
+		LocalTime horaPedido = LocalTime.now();
+
+		Pedidos pedido = new Pedidos(nombre, fechaPedido, horaPedido, telefono, num_tarjeta, direccion, codigoPostal);
 		Session session = HibernateUtil.getSessionFactory().openSession();
+
 		session.beginTransaction();
 
-		session.save(""); // <|--- Aqui guardamos el objeto en la base de datos.
+		session.save(pedido); // <|--- Aqui guardamos el objeto en la base de datos.
 
 		session.getTransaction().commit();
+
+		for (Integer clave : claves) {
+
+			DetallesPedido detalles = new DetallesPedido(pedido.getCodigoPedido(),
+					carro.get(clave).getProducto().getCodigoProducto(), carro.get(clave).getProducto().getNombre(),
+					carro.get(clave).getProducto().getPrecio(), carro.get(clave).getCatidad());
+
+			session.beginTransaction();
+
+			session.save(detalles); // <|--- Aqui guardamos el objeto en la base de datos.
+
+			session.getTransaction().commit();
+		}
+		request.setAttribute("codigoPedido", pedido.getCodigoPedido());
 		session.close();
+		return true;
+	}
+
+	@SuppressWarnings("unchecked")
+	public boolean mostrarPedidos(HttpServletRequest request) {
+
+		HttpSession atrsesion = request.getSession();
+		String user = (String) atrsesion.getAttribute("nombreDeUsuario");
+		Session datos = HibernateUtil.getSessionFactory().openSession();
+
+		HashMap<Integer, ListarPedidos> hashPedidos = new HashMap<Integer, ListarPedidos>();
+
+		ArrayList<Pedidos> arrayPedidos = (ArrayList<Pedidos>) datos
+				.createQuery("from Pedidos where nombre_usuario='" + user + "'").list();
+		System.out.println(arrayPedidos);
+
+		if (!arrayPedidos.isEmpty()) {
+			System.out.println("dentro");
+
+			ArrayList<DetallesPedido> arrayDetalles = new ArrayList<DetallesPedido>();
+
+			for (int i = 0; i < arrayPedidos.size(); i++) {
+				arrayDetalles = (ArrayList<DetallesPedido>) datos
+						.createQuery("from DetallesPedido where codigo_pedido=" + arrayPedidos.get(i).getCodigoPedido())
+						.list();
+				ListarPedidos lista = new ListarPedidos(arrayPedidos, arrayDetalles);
+				hashPedidos.put(arrayPedidos.get(i).getCodigoPedido(), lista);
+			}
+
+			request.setAttribute("hashPedidos", hashPedidos);
+			return true;
+		}
+		return false;
+
 	}
 
 }

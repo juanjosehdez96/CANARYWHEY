@@ -51,22 +51,6 @@ $(document).ready(function () {
 
 </script>
 
-<style>
-.my-error-class{
-    color:red;
-    font-weight: bold;
-    margin-left: 1.5%;
-
-    
-}
-.my-valid-class {
-    color:green;
-      font-weight: bold;
-}
-
-</style>
-
-
 
 </head>
 <body>
@@ -99,7 +83,7 @@ $(document).ready(function () {
 						<li class="nav-item active"><a class="nav-link"
 							href="/CANARYWHEY/Servlet?action=Productos">Productos</a></li>
 						<li class="nav-item"><a class="nav-link"
-							href="/CANARYWHEY/Servlet?action=misPedidos">Mis Pedidos</a></li>
+							href="/CANARYWHEY/Servlet?action=carrito">Carrito</a></li>
 					</ul>
 				</div>
 			</div>

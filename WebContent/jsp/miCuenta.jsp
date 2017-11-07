@@ -13,7 +13,37 @@
 <script src="js/bootstrap.min.js"></script>
 <script src="js/popper.js"></script>
 
+<link rel="stylesheet" href="css/jquery-confirm.min.css">
+<script src="js/jquery-confirm.min.js"></script>
 
+<script>
+	$(document).ready(function() {
+
+		$("#borrarCuenta").on("click", function(event) {
+
+			event.preventDefault();
+
+			$.confirm({
+				title : '¿Estás seguro?',
+				content : 'Tu cuenta será eliminada',
+				type : 'red',
+				typeAnimated : true,
+				buttons : {
+					tryAgain : {
+						text : 'Aceptar',
+						btnClass : 'btn-red',
+						action : function(e) {
+							$("#formulario").submit();
+						}
+					},
+					cerrar : function() {
+						return;
+					}
+				}
+			});
+		});
+	});
+</script>
 
 
 
@@ -27,7 +57,7 @@
 
 		Session datos = HibernateUtil.getSessionFactory().openSession();
 		Usuarios usuario = (Usuarios) datos.get(Usuarios.class, user);
-		
+
 		@SuppressWarnings("unchecked")
 		HashMap<Integer, ProductoCarrito> carro = (HashMap<Integer, ProductoCarrito>) atrsesion
 				.getAttribute("carrito");
@@ -36,7 +66,7 @@
 
 		if (carro != null) {
 			numItems = carro.size();
-			
+
 		}
 	%>
 
@@ -63,7 +93,10 @@
 						<li class="nav-item"><a class="nav-link"
 							href="/CANARYWHEY/Servlet?action=Productos">Productos</a></li>
 						<li class="nav-item"><a class="nav-link"
-							href="/CANARYWHEY/Servlet?action=misPedidos">Mis Pedidos [<%=numItems%>]</a></li>
+							href="/CANARYWHEY/Servlet?action=carrito">Carrito [<%=numItems%>]
+						</a></li>
+						<li class="nav-item "><a class="nav-link"
+							href="/CANARYWHEY/Servlet?action=pedidos">Mis Pedidos </a></li>
 					</ul>
 				</div>
 			</div>
@@ -73,7 +106,8 @@
 
 
 	<div id="table" class="table-editable">
-		<form action="Servlet?action=Cuenta" method="post">
+		<form action="Servlet?action=Cuenta" method="post" id="formulario"
+			name="form">
 
 			<span class="table-add glyphicon glyphicon-plus"></span>
 			<table class="table">
@@ -128,14 +162,15 @@
 			</table>
 			<button style="margin-left: 10%" name="modificar"
 				class="btn btn-primary">Modificar</button>
-			<button style="margin-left: 30%" name="borrarCuenta"
-				class="btn btn-primary">Eliminar Cuenta</button>
+			<button style="margin-left: 30%" class="btn btn-primary"
+				id="borrarCuenta">Eliminar Cuenta</button>
+			<input type="hidden" name="borrarCuenta" />
 
 
 		</form>
 	</div>
 
-	<%	
+	<%
 		File file = new File("C://Users/Juan José/git/CANARYWHEY/WebContent/imgsUsuarios", user + ".jpg");
 		if (!file.exists()) {
 	%>

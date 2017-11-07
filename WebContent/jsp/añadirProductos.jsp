@@ -95,7 +95,7 @@ $(document).ready(function () {
 						<li class="nav-item active"><a class="nav-link"
 							href="/CANARYWHEY/Servlet?action=Productos">Productos</a></li>
 						<li class="nav-item"><a class="nav-link"
-							href="/CANARYWHEY/Servlet?action=misPedidos">Mis Pedidos</a></li>
+							href="/CANARYWHEY/Servlet?action=carrito">Carrito</a></li>
 					</ul>
 				</div>
 			</div>

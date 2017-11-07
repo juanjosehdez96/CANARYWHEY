@@ -1,6 +1,8 @@
 package modelo;
 // Generated 03-nov-2017 9:40:22 by Hibernate Tools 5.2.5.Final
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -21,31 +23,40 @@ public class Pedidos implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "codigo_pedido")
 	private Integer codigoPedido;
-	
+
 	@Column(name = "nombre_usuario")
-	private int nombreUsuario;
-	
+	private String nombreUsuario;
+
 	@Column(name = "fecha_pedido")
-	private Date fechaPedido;
-	
+	private LocalDate fechaPedido;
+
 	@Column(name = "hora_pedido")
-	private Date horaPedido;
-	
+	private LocalTime horaPedido;
+
 	@Column(name = "telefono")
 	private int telefono;
-	
+
 	@Column(name = "num_tarjeta")
-	private int numTarjeta;
+	private String numTarjeta;
+
+	@Column(name = "direccion")
+	private String direccion;
+
+	@Column(name = "codigo_postal")
+	private int codigoPostal;
 
 	public Pedidos() {
 	}
 
-	public Pedidos(int nombreUsuario, Date fechaPedido, Date horaPedido, int telefono, int numTarjeta) {
+	public Pedidos(String nombreUsuario, LocalDate fechaPedido, LocalTime horaPedido, int telefono, String numTarjeta,
+			String direccion, int codigoPostal) {
 		this.nombreUsuario = nombreUsuario;
 		this.fechaPedido = fechaPedido;
 		this.horaPedido = horaPedido;
 		this.telefono = telefono;
-		this.numTarjeta = numTarjeta;
+		this.numTarjeta = numTarjeta;		
+		this.direccion = direccion;
+		this.codigoPostal = codigoPostal;
 	}
 
 	public Integer getCodigoPedido() {
@@ -56,27 +67,27 @@ public class Pedidos implements java.io.Serializable {
 		this.codigoPedido = codigoPedido;
 	}
 
-	public int getNombreUsuario() {
+	public String getNombreUsuario() {
 		return this.nombreUsuario;
 	}
 
-	public void setNombreUsuario(int nombreUsuario) {
+	public void setNombreUsuario(String nombreUsuario) {
 		this.nombreUsuario = nombreUsuario;
 	}
 
-	public Date getFechaPedido() {
+	public LocalDate getFechaPedido() {
 		return this.fechaPedido;
 	}
 
-	public void setFechaPedido(Date fechaPedido) {
+	public void setFechaPedido(LocalDate fechaPedido) {
 		this.fechaPedido = fechaPedido;
 	}
 
-	public Date getHoraPedido() {
+	public LocalTime getHoraPedido() {
 		return this.horaPedido;
 	}
 
-	public void setHoraPedido(Date horaPedido) {
+	public void setHoraPedido(LocalTime horaPedido) {
 		this.horaPedido = horaPedido;
 	}
 
@@ -88,12 +99,28 @@ public class Pedidos implements java.io.Serializable {
 		this.telefono = telefono;
 	}
 
-	public int getNumTarjeta() {
+	public String getNumTarjeta() {
 		return this.numTarjeta;
 	}
 
-	public void setNumTarjeta(int numTarjeta) {
+	public void setNumTarjeta(String numTarjeta) {
 		this.numTarjeta = numTarjeta;
+	}
+
+	public String getDireccion() {
+		return direccion;
+	}
+
+	public void setDireccion(String direccion) {
+		this.direccion = direccion;
+	}
+
+	public int getCodigoPostal() {
+		return codigoPostal;
+	}
+
+	public void setCodigoPostal(int codigoPostal) {
+		this.codigoPostal = codigoPostal;
 	}
 
 }

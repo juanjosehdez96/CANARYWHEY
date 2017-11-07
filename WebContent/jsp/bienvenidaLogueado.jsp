@@ -31,7 +31,7 @@
 
 		if (carro != null) {
 			numItems = carro.size();
-			
+
 		}
 	%>
 	<header>
@@ -57,8 +57,10 @@
 						<li class="nav-item"><a class="nav-link"
 							href="/CANARYWHEY/Servlet?action=Productos">Productos</a></li>
 						<li class="nav-item"><a class="nav-link"
-							href="/CANARYWHEY/Servlet?action=misPedidos">Mis Pedidos [<%=numItems%>]
+							href="/CANARYWHEY/Servlet?action=carrito">Carrito [<%=numItems%>]
 						</a></li>
+						<li class="nav-item "><a class="nav-link"
+							href="/CANARYWHEY/Servlet?action=pedidos">Mis Pedidos </a></li>
 					</ul>
 				</div>
 			</div>

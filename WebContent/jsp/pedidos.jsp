@@ -1,87 +1,72 @@
 <%@page
-	import="modelo.Usuarios, modelo.ProductoCarrito, modelo.HibernateUtil, org.hibernate.Session, java.util.ArrayList, java.util.HashMap, 
-	modelo.Categorias, modelo.Productos, java.util.Set;"%>
+	import="com.sun.org.apache.xpath.internal.axes.HasPositionalPredChecker"%>
+<%@page import="org.apache.jasper.tagplugins.jstl.core.ForEach"%>
+<%@page import="org.hibernate.annotations.Synchronize"%>
+<%@page
+	import="modelo.Usuarios, modelo.HibernateUtil, org.hibernate.Session, modelo.ListarPedidos, java.util.Set, modelo.Pedidos, modelo.DetallesPedido, modelo.ProductoCarrito, java.util.HashMap, java.util.ArrayList, modelo.Categorias, modelo.Productos"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <title>CANARYWHEY</title>
-
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <script src="jquery/jquery-3.2.1.min.js"></script>
 <link rel="stylesheet" href="css/estilos.css">
-<link
-	href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"
-	rel="stylesheet">
 
-<link rel="stylesheet" href="css/jquery-confirm.min.css">
-<script src="js/jquery-confirm.min.js"></script>
+<style>
+#tabla {
+	margin-top: 7%;
+	width: 30%;
+	margin-left: 2%;
+	background-color: #7FFFD4;
+	float: left;
+	margin-bottom: 6%;
+}
 
-<script>
-	$(document).ready(function() {
-		$("button:even").on("click", function(event) {
+#tabla tr {
+	font-size: 20px;
+}
 
-			//event.preventDefault();
-
-			$.confirm({
-				title : '¿Estás seguro?',
-				content : 'El producto será eliminado',
-				type : 'red',
-				typeAnimated : true,
-				buttons : {
-					tryAgain : {
-						text : 'Aceptar',
-						btnClass : 'btn-red',
-						action : function(e) {
-							$("#formulario").submit();
-
-						}
-					},
-					cerrar : function() {
-						return;
-					}
-				}
-			});
-		});
-	});
-</script>
-
+#tabla th {
+	text-align: center;
+}
+</style>
 
 </head>
 <body>
 
 
+
 	<%
 		HttpSession atrsesion = request.getSession();
 		String user = (String) atrsesion.getAttribute("nombreDeUsuario");
-
 		Session datos = HibernateUtil.getSessionFactory().openSession();
-		Usuarios usuario = (Usuarios) datos.get(Usuarios.class, user);
-
-		String idProducto = request.getParameter("proId");
+		//String idCategoria = request.getParameter("id");
 
 		@SuppressWarnings("unchecked")
 		HashMap<Integer, ProductoCarrito> carro = (HashMap<Integer, ProductoCarrito>) atrsesion
 				.getAttribute("carrito");
 
-		int numItems = 0;
+		if (user != null) {
 
-		if (carro != null) {
-			numItems = carro.size();
+			Usuarios usuario = (Usuarios) datos.get(Usuarios.class, user);
 
-			atrsesion.setAttribute("numItems", carro.size());
-		}
-		//pageContext.setAttribute("arrayCarrito", carro);
+			int numItems = 0;
+
+			if (carro != null) {
+				numItems = carro.size();
+
+			}
 	%>
 
 	<header> <!-- Navigation --> <nav
 		class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
 	<div class="container">
-		<a class="navbar-brand" href="/CANARYWHEY/Servlet?action=InicioSesion">BIENVENIDO:
-			<%=user.toUpperCase()%></a> <a href="/CANARYWHEY/Servlet?action=Inicio">Cerrar
-			sesion</a>
+		<a class="navbar-brand" href="/CANARYWHEY/Servlet">BIENVENIDO: <%=user.toUpperCase()%></a>
+		<a href="/CANARYWHEY/Servlet?action=Inicio">Cerrar sesion</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse"
 			data-target="#navbarResponsive" aria-controls="navbarResponsive"
 			aria-expanded="false" aria-label="Toggle navigation">
@@ -96,123 +81,121 @@
 				<li class="nav-item"><a class="nav-link"
 					href="/CANARYWHEY/Servlet?action=Productos">Productos<span
 						class="sr-only">(current)</span></a></li>
-				<li class="nav-item active"><a class="nav-link"
-					href="/CANARYWHEY/Servlet?action=misPedidos">Mis Pedidos [<%=numItems%>]
+				<li class="nav-item"><a class="nav-link"
+					href="/CANARYWHEY/Servlet?action=carrito">Carrito [<%=numItems%>]
 				</a></li>
+				<li class="nav-item active"><a class="nav-link"
+					href="/CANARYWHEY/Servlet?action=pedidos">Mis Pedidos </a></li>
 			</ul>
 		</div>
 	</div>
 	</nav> </header>
 
-
 	<%
-		if (carro != null) {
-			if (carro.size() > 0) {
-				Set<Integer> claves = carro.keySet();
+		} else {
 	%>
-
-
+	<header> <nav
+		class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
 	<div class="container">
-		<table id="cart" class="table table-hover table-condensed">
-			<thead>
-				<tr>
-					<th style="width: 50%">Producto</th>
-					<th style="width: 10%">Precio</th>
-					<th style="width: 8%">Cantidad</th>
-					<th style="width: 22%" class="text-center">Subtotal</th>
-					<th style="width: 10%"></th>
-				</tr>
-			</thead>
-
-
-
-			<%
-				int subtotal = 0;
-						int total = 0;
-
-						for (Integer clave : claves) {
-							subtotal = carro.get(clave).getProducto().getPrecio() * carro.get(clave).getCatidad();
-							total += subtotal;
-			%>
-
-			<tbody>
-				<tr>
-					<td data-th="Product">
-						<div class="row">
-							<div class="col-sm-2 hidden-xs">
-								<img id="imagenCarro"
-									src="imgsProductos/<%=carro.get(clave).getProducto().getCodigoProducto()%>.jpg"
-									alt="..." class="img-responsive" />
-							</div>
-							<div class="col-sm-10">
-								<h4 class="nomargin"><%=carro.get(clave).getProducto().getNombre()%></h4>
-
-							</div>
-						</div>
-					</td>
-
-					<form action="Servlet?action=carrito" method="post" id="formulario"
-						name="form">
-						<td data-th="Price"><%=carro.get(clave).getProducto().getPrecio()%>&euro;</td>
-						<td data-th="Quantity"><input type="hidden" name="proId"
-							value="<%=carro.get(clave).getProducto().getCodigoProducto()%>" />
-							<input name="cantidad" type="number"
-							class="form-control text-center"
-							value="<%=carro.get(clave).getCatidad()%>" /></td>
-						<td data-th="Subtotal" class="text-center" id="subtotal"><%=subtotal%>&euro;</td>
-						<td class="actions" data-th=""><input type="hidden"
-							name="borrar" id="borrame"
-							value="<%=carro.get(clave).getProducto().getCodigoProducto()%>" />
-							<%
-								out.println(carro.get(clave).getProducto().getCodigoProducto());
-							%>
-							<button type="submit" name="actualizar"
-								class="btn btn-info btn-sm">
-								<i class="fa fa-refresh"></i>
-							</button>
-							<button type="submit" id="btnEliminar"
-								class="btn btn-danger btn-sm">
-								<i class="fa fa-trash-o"></i>
-							</button></td>
-					</form>
-				</tr>
-			</tbody>
-
-
-			<%
-				}
-			%>
-
-			<tfoot>
-
-				<tr>
-					<td><a href="/CANARYWHEY/Servlet?action=Productos"
-						class="btn btn-warning"><i class="fa fa-angle-left"></i>
-							Continuar comprando</a></td>
-					<td colspan="2" class="hidden-xs"></td>
-					<td class="hidden-xs text-center" id="total"><strong>Total
-							<%=total%>&euro;
-					</strong></td>
-					<td><a href="/CANARYWHEY/Servlet?action=Checkout"
-						class="btn btn-success btn-block">Checkout <i
-							class="fa fa-angle-right"></i>
-					</a></td>
-				</tr>
-			</tfoot>
-		</table>
+		<a class="navbar-brand" href="/CANARYWHEY/Servlet">BIENVENIDO </a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#navbarResponsive" aria-controls="navbarResponsive"
+			aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarResponsive">
+			<ul class="navbar-nav ml-auto">
+				<li class="nav-item"><a class="nav-link"
+					href="/CANARYWHEY/Servlet">Inicio</a></li>
+				<li class="nav-item"><a class="nav-link"
+					href="/CANARYWHEY/Servlet?action=Acceder">Acceder</a></li>
+				<li class="nav-item active"><a class="nav-link"
+					href="/CANARYWHEY/Servlet?action=Productos">Productos<span
+						class="sr-only">(current)</span></a></li>
+			</ul>
+		</div>
 	</div>
+	</nav> </header>
 	<%
-		} else {
+		}
+		@SuppressWarnings("unchecked")
+		HashMap<Integer, ListarPedidos> hashPedidos = (HashMap<Integer, ListarPedidos>) request
+				.getAttribute("hashPedidos");
+
+		if (hashPedidos != null) {
+
+			Set<Integer> claves = hashPedidos.keySet();
+
+			for (Integer clave : claves) {
 	%>
-	<div id="carrito" style="text-align: center;"><h1>El carrito está vacío!!</h1></div>
+
+	<table id="tabla" class="table">
+		<thead>
+
+			<tr>
+				<th colspan="3"><h3>
+						Pedido número
+						<%=hashPedidos.get(clave).getDetalles().get(clave - 1).getCodigoPedido()%></h3></th>
+
+			</tr>
+		</thead>
+		<tfoot>
+			<tr>
+				<th>Nombre</th>
+				<th>Precio</th>
+				<th>Cantidad</th>
+			</tr>
+
+
+			<%
+				int precioTotal = 0;
+						for (int i = 0; i < hashPedidos.get(clave).getDetalles().size(); i++) {
+			%>
+			<tr>
+				<th><%=hashPedidos.get(clave).getDetalles().get(i).getNombreProducto()%></th>
+				<th><%=hashPedidos.get(clave).getDetalles().get(i).getPrecio()%>&euro;</th>
+				<th><%=hashPedidos.get(clave).getDetalles().get(i).getCantidad()%></th>
+			</tr>
+
+
+			<%
+				precioTotal += hashPedidos.get(clave).getDetalles().get(i).getPrecio();
+						}
+			%>
+
+
+
+			<tr>
+				<th>Fecha pedido:</th>
+				<th colspan="3" style="padding-top: 3%"><%=hashPedidos.get(clave).getPedidos().get(clave - 1).getFechaPedido()%></th>
+			</tr>
+			<tr>
+				<th>Precio Total:</th>
+				<th colspan="3" style="padding-top: 3%"><%=precioTotal%>&euro;</th>
+			</tr>
+
+
+
+		</tfoot>
+	</table>
+
+
 	<%
 		}
 		} else {
 	%>
-	<div id="carrito" style="text-align: center;"><h1>El carrito está vacío!!</h1></div>
+
+
+	<div style="text-align: center; margin-top: 10%">
+		<h1>No has realizado ningún pedido aún!!</h1>
+	</div>
+
+
+
 	<%
 		}
 	%>
+
 
 
 
@@ -227,6 +210,7 @@
 
 	<script src="js/popper.js"></script>
 	<script src="js/bootstrap.min.js"></script>
-
 </body>
+
+
 </html>
