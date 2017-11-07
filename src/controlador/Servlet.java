@@ -650,10 +650,9 @@ public class Servlet extends HttpServlet {
 
 		ArrayList<Pedidos> arrayPedidos = (ArrayList<Pedidos>) datos
 				.createQuery("from Pedidos where nombre_usuario='" + user + "'").list();
-		System.out.println(arrayPedidos);
 
 		if (!arrayPedidos.isEmpty()) {
-			System.out.println("dentro");
+		
 
 			ArrayList<DetallesPedido> arrayDetalles = new ArrayList<DetallesPedido>();
 
