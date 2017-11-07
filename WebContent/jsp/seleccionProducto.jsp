@@ -90,11 +90,25 @@
 				<li class="nav-item active"><a class="nav-link"
 					href="/CANARYWHEY/Servlet?action=Productos">Productos<span
 						class="sr-only">(current)</span></a></li>
+				<%
+					if (!usuario.getRol().equals("Administrador")) {
+				%>
+
 				<li class="nav-item"><a class="nav-link"
 					href="/CANARYWHEY/Servlet?action=carrito">Carrito [<%=numItems%>]
 				</a></li>
 				<li class="nav-item "><a class="nav-link"
 					href="/CANARYWHEY/Servlet?action=pedidos">Mis Pedidos </a></li>
+
+				<%
+					} else {
+				%>
+				<li class="nav-item "><a class="nav-link"
+					href="/CANARYWHEY/Servlet?action=usuarios">Usuarios</a></li>
+
+				<%
+					}
+				%>
 			</ul>
 		</div>
 	</div>
@@ -218,12 +232,13 @@
 					%>
 
 				</div>
+				<input type="button" style="float: right; margin-left: 5%;"
+					onclick="window.location.href='/CANARYWHEY/Servlet?action=Productos';"
+					value="Volver" class="btn btn-primary" />
 			</form>
 		</div>
 
-		<input type="button" style="float: right; margin-left: 5%;"
-			onclick="window.location.href='/CANARYWHEY/Servlet?action=Productos';"
-			value="Volver" class="btn btn-primary" />
+
 	</div>
 
 	<%

@@ -22,6 +22,8 @@
 	<%
 		HttpSession atrsesion = request.getSession();
 		String user = (String) atrsesion.getAttribute("nombreDeUsuario");
+		Session datos = HibernateUtil.getSessionFactory().openSession();
+		Usuarios usuario = (Usuarios) datos.get(Usuarios.class, user);
 
 		@SuppressWarnings("unchecked")
 		HashMap<Integer, ProductoCarrito> carro = (HashMap<Integer, ProductoCarrito>) atrsesion
@@ -56,11 +58,26 @@
 							href="/CANARYWHEY/Servlet?action=Cuenta">Mi cuenta</a></li>
 						<li class="nav-item"><a class="nav-link"
 							href="/CANARYWHEY/Servlet?action=Productos">Productos</a></li>
+						<%
+							if (!usuario.getRol().equals("Administrador")) {
+						%>
+
 						<li class="nav-item"><a class="nav-link"
 							href="/CANARYWHEY/Servlet?action=carrito">Carrito [<%=numItems%>]
 						</a></li>
 						<li class="nav-item "><a class="nav-link"
 							href="/CANARYWHEY/Servlet?action=pedidos">Mis Pedidos </a></li>
+
+						<%
+							} else {
+								
+						%>		
+						<li class="nav-item "><a class="nav-link"
+							href="/CANARYWHEY/Servlet?action=usuarios">Usuarios</a></li>						
+						
+						<%
+							}
+						%>
 					</ul>
 				</div>
 			</div>

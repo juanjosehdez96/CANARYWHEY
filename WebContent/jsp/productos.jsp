@@ -60,18 +60,35 @@
 				<li class="nav-item active"><a class="nav-link"
 					href="/CANARYWHEY/Servlet?action=Productos">Productos<span
 						class="sr-only">(current)</span></a></li>
+
+
+
+				<%
+					if (!usuario.getRol().equals("Administrador")) {
+				%>
+
 				<li class="nav-item"><a class="nav-link"
 					href="/CANARYWHEY/Servlet?action=carrito">Carrito [<%=numItems%>]
 				</a></li>
 				<li class="nav-item "><a class="nav-link"
 					href="/CANARYWHEY/Servlet?action=pedidos">Mis Pedidos </a></li>
+
 			</ul>
 		</div>
 	</div>
 	</nav> </header>
+
 	<%
-		if (usuario.getRol().equals("Administrador")) {
+		} else {
 	%>
+	<li class="nav-item "><a class="nav-link"
+		href="/CANARYWHEY/Servlet?action=usuarios">Usuarios</a></li>
+
+			</ul>
+		</div>
+	</div>
+	</nav> </header>
+
 
 	<form action="/CANARYWHEY/Servlet?action=addCategorias" method="post">
 		<input class="btn btn-primary" type="submit" name="crearPCategoria"
@@ -85,9 +102,9 @@
 			style="margin-top: 7%; float: left; margin-left: 79%; position: absolute;" />
 	</form>
 
+
 	<%
 		}
-
 		} else {
 	%>
 	<header> <!-- Navigation --> <nav

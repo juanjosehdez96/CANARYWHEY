@@ -19,45 +19,52 @@
 
 
 <script>
+	$(document).ready(function() {
+		$("#btnGuardar").on("click", function() {
 
-$(document).ready(function () {
-	$("#btnGuardar").on("click", function() {
-		
-		// name validation
-	    var nameregex = /^[a-z\d_\d-]{2,15}$/i; 
+			// name validation
+			var nameregex = /^[a-z\d_\d-]{2,15}$/i;
 
-	   
-	   $.validator.addMethod("validname", function( value, element ) {
-	       return this.optional( element ) || nameregex.test( value );
-	   }); 
-	   
-	   
-	   $("#formulario").validate({
-		   
-		   errorClass: "my-error-class",
-		   validClass: "my-valid-class",
-		    
-		    rules: {
-		        nombre: {  required: true, validname: true},
-		        precio: { required: true, digits:true},
-		        stock: { required:true, digits:true},
-		        file: { required: true, extension: "jpg|png"}
-		       
-		    },
-		    messages: {
-		        nombre: "Nombre no válido.",
-		        precio: "Introduzca valor numérico.",
-		        stock: "Introduzca valor numérico.",
-		        file: "Tipo de archivo no válido."
-		        
-		    
-		    }});  
-		
+			$.validator.addMethod("validname", function(value, element) {
+				return this.optional(element) || nameregex.test(value);
+			});
+
+			$("#formulario").validate({
+
+				errorClass : "my-error-class",
+				validClass : "my-valid-class",
+
+				rules : {
+					nombre : {
+						required : true,
+						validname : true
+					},
+					precio : {
+						required : true,
+						digits : true
+					},
+					stock : {
+						required : true,
+						digits : true
+					},
+					file : {
+						required : true,
+						extension : "jpg|png"
+					}
+
+				},
+				messages : {
+					nombre : "Nombre no válido.",
+					precio : "Introduzca valor numérico.",
+					stock : "Introduzca valor numérico.",
+					file : "Tipo de archivo no válido."
+
+				}
+			});
+
 		});
 
-});
-
-
+	});
 </script>
 
 
@@ -66,7 +73,7 @@ $(document).ready(function () {
 
 	<%
 		HttpSession atrsesion = request.getSession();
-			String user = (String) atrsesion.getAttribute("nombreDeUsuario");
+		String user = (String) atrsesion.getAttribute("nombreDeUsuario");
 
 		Session datos = HibernateUtil.getSessionFactory().openSession();
 		Usuarios usuario = (Usuarios) datos.get(Usuarios.class, user);
@@ -94,8 +101,8 @@ $(document).ready(function () {
 						</a></li>
 						<li class="nav-item active"><a class="nav-link"
 							href="/CANARYWHEY/Servlet?action=Productos">Productos</a></li>
-						<li class="nav-item"><a class="nav-link"
-							href="/CANARYWHEY/Servlet?action=carrito">Carrito</a></li>
+						<li class="nav-item "><a class="nav-link"
+							href="/CANARYWHEY/Servlet?action=usuarios">Usuarios</a></li>
 					</ul>
 				</div>
 			</div>
@@ -105,7 +112,8 @@ $(document).ready(function () {
 
 
 	<div id="table" class="table-editable" style="width: 100%;">
-		<form action="Servlet?action=addProductos" method="post" enctype="multipart/form-data" id="formulario">
+		<form action="Servlet?action=addProductos" method="post"
+			enctype="multipart/form-data" id="formulario">
 
 			<span class="table-add glyphicon glyphicon-plus"></span>
 			<table class="table">
@@ -145,13 +153,13 @@ $(document).ready(function () {
 					<tr>
 						<th scope="row">3</th>
 						<td>Precio:</td>
-						<td><input type="text" name="precio"/></td>
+						<td><input type="text" name="precio" /></td>
 
 					</tr>
 					<tr>
 						<th scope="row">4</th>
 						<td>Unidades disponibles:</td>
-						<td><input type="text" name="stock"/></td>
+						<td><input type="text" name="stock" /></td>
 					</tr>
 
 					<tr>
@@ -162,8 +170,9 @@ $(document).ready(function () {
 				</tbody>
 			</table>
 			<input type="submit" style="margin-left: 30%" value="Guardar Cambios"
-				name="guardarProductos" class="btn btn-primary" id="btnGuardar"/> 
-				<input	type="submit" style="margin-left: 20%" value="Volver" name="volver" 
+				name="guardarProductos" class="btn btn-primary" id="btnGuardar" />
+			<input type="submit" style="margin-left: 20%" value="Volver"
+				name="volver"
 				onclick="window.location.href='/CANARYWHEY/Servlet?action=Productos';"
 				class="btn btn-primary" />
 

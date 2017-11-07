@@ -265,6 +265,14 @@ public class Servlet extends HttpServlet {
 				}
 				break;
 
+			case "usuarios":
+				if(request.getParameter("borrarUsuario") != null) {
+					eliminarUsuario(request);
+					url = base + "usuarios.jsp";
+				}
+				url = base + "usuarios.jsp";
+				break;
+
 			}
 
 		}
@@ -438,8 +446,6 @@ public class Servlet extends HttpServlet {
 				.getAttribute("carrito");
 
 		int idProducto = Integer.parseInt(request.getParameter("proId"));
-		System.err.println(idProducto);
-		System.out.println(carrito.get(idProducto).getProducto().getNombre());
 
 		carrito.remove(idProducto);
 
@@ -652,7 +658,6 @@ public class Servlet extends HttpServlet {
 				.createQuery("from Pedidos where nombre_usuario='" + user + "'").list();
 
 		if (!arrayPedidos.isEmpty()) {
-		
 
 			ArrayList<DetallesPedido> arrayDetalles = new ArrayList<DetallesPedido>();
 
@@ -668,6 +673,24 @@ public class Servlet extends HttpServlet {
 			return true;
 		}
 		return false;
+
+	}
+
+	public void eliminarUsuario(HttpServletRequest request) {
+
+		String user = request.getParameter("borrarUsuario");
+		System.out.println(user);
+
+		Session session = HibernateUtil.getSessionFactory().openSession();
+
+		Usuarios usuario = (Usuarios) session.get(Usuarios.class, user);
+
+		session.beginTransaction();
+
+		session.delete(usuario);
+
+		session.getTransaction().commit();
+		session.close();
 
 	}
 

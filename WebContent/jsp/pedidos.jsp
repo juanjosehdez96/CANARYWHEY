@@ -21,17 +21,20 @@
 	margin-top: 7%;
 	width: 30%;
 	margin-left: 2%;
-	background-color: #7FFFD4;
+	background-color: #2c3e50;
 	float: left;
-	margin-bottom: 6%;
+	margin-bottom: 6%;	
+	
 }
 
 #tabla tr {
 	font-size: 20px;
+	color: white;
 }
 
 #tabla th {
 	text-align: center;
+	color:white;
 }
 </style>
 

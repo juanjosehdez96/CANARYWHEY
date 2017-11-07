@@ -16,39 +16,51 @@
 
 
 <script>
+	$(document)
+			.ready(
+					function() {
+						$("#btnGuardar")
+								.on(
+										"click",
+										function() {
 
-$(document).ready(function () {
-	$("#btnGuardar").on("click", function() {
-		
-		// name validation
-	    var nameregex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/i;
+											// name validation
+											var nameregex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/i;
 
-	   
-	   $.validator.addMethod("validname", function( value, element ) {
-	       return this.optional( element ) || nameregex.test( value );
-	   }); 
-	   	 
-	   
-	   $("#formulario").validate({
-		   
-		   errorClass: "my-error-class",
-		   validClass: "my-valid-class",
-		    
-		    rules: {
-		    	nombreCategoria: {  required: true, validname: true}
-		        
-		    },
-		    messages: {
-		    	nombreCategoria: "Nombre no válido."		        
-		    
-		    }});  
-		
-		});
+											$.validator
+													.addMethod(
+															"validname",
+															function(value,
+																	element) {
+																return this
+																		.optional(element)
+																		|| nameregex
+																				.test(value);
+															});
 
-});
+											$("#formulario")
+													.validate(
+															{
 
+																errorClass : "my-error-class",
+																validClass : "my-valid-class",
 
+																rules : {
+																	nombreCategoria : {
+																		required : true,
+																		validname : true
+																	}
 
+																},
+																messages : {
+																	nombreCategoria : "Nombre no válido."
+
+																}
+															});
+
+										});
+
+					});
 </script>
 
 
@@ -82,8 +94,8 @@ $(document).ready(function () {
 						</a></li>
 						<li class="nav-item active"><a class="nav-link"
 							href="/CANARYWHEY/Servlet?action=Productos">Productos</a></li>
-						<li class="nav-item"><a class="nav-link"
-							href="/CANARYWHEY/Servlet?action=carrito">Carrito</a></li>
+						<li class="nav-item "><a class="nav-link"
+							href="/CANARYWHEY/Servlet?action=usuarios">Usuarios</a></li>
 					</ul>
 				</div>
 			</div>
@@ -93,7 +105,8 @@ $(document).ready(function () {
 
 
 	<div id="table" class="table-editable" style="width: 100%;">
-		<form action="Servlet?action=addCategorias" method="post" id="formulario">
+		<form action="Servlet?action=addCategorias" method="post"
+			id="formulario">
 
 			<span class="table-add glyphicon glyphicon-plus"></span>
 			<table class="table">
@@ -106,17 +119,17 @@ $(document).ready(function () {
 					<tr>
 						<th scope="row">1</th>
 						<td>Nombre de categoría</td>
-						<td><input type="text" name="nombreCategoria"/></td>
+						<td><input type="text" name="nombreCategoria" /></td>
 					</tr>
 
 				</tbody>
 			</table>
-			
-			<input type="submit" style="margin-left: 30%" value="Guardar Cambios" id="btnGuardar" name="guardarCategorias"
-				class="btn btn-primary" />
+
+			<input type="submit" style="margin-left: 30%" value="Guardar Cambios"
+				id="btnGuardar" name="guardarCategorias" class="btn btn-primary" />
 			<button type="submit" style="margin-left: 20%;" name="volver"
-			 onclick="window.location.href='/CANARYWHEY/Servlet?action=Productos';"
-				class="btn btn-primary" >Volver</button>
+				onclick="window.location.href='/CANARYWHEY/Servlet?action=Productos';"
+				class="btn btn-primary">Volver</button>
 		</form>
 	</div>
 

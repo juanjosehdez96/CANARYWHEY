@@ -17,45 +17,65 @@
 
 
 <script>
+	$(document)
+			.ready(
+					function() {
+						$("#btnGuardar")
+								.on(
+										"click",
+										function() {
 
-$(document).ready(function () {
-	$("#btnGuardar").on("click", function() {
-		
-		// name validation
-	    var nameregex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/i;  
-	   
-	   $.validator.addMethod("validname", function( value, element ) {
-	       return this.optional( element ) || nameregex.test( value );
-	   }); 
-	      
-	   
-	
-	   $("#formulario").validate({
-		   
-		   errorClass: "my-error-class",
-		   validClass: "my-valid-class",
-		    
-		    rules: {
-		        nombre: {  required: true, validname: true},
-		        precio: { required: true, digits:true},
-		        stock: { required:true, digits:true},
-		        file: { required: true}
-		       
-		    },
-		    messages: {
-		        nombre: "Nombre no válido.",
-		        precio: "Introduzca valor numérico.",
-		        stock: "Introduzca valor numérico.",
-		        file: "Tipo de archivo no válido."
-		        
-		    
-		    }});  
-		
-		});
+											// name validation
+											var nameregex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/i;
 
-});
+											$.validator
+													.addMethod(
+															"validname",
+															function(value,
+																	element) {
+																return this
+																		.optional(element)
+																		|| nameregex
+																				.test(value);
+															});
 
+											$("#formulario")
+													.validate(
+															{
 
+																errorClass : "my-error-class",
+																validClass : "my-valid-class",
+
+																rules : {
+																	nombre : {
+																		required : true,
+																		validname : true
+																	},
+																	precio : {
+																		required : true,
+																		digits : true
+																	},
+																	stock : {
+																		required : true,
+																		digits : true
+																	},
+																	file : {
+																		required : true
+																	}
+
+																},
+																messages : {
+																	nombre : "Nombre no válido.",
+																	precio : "Introduzca valor numérico.",
+																	stock : "Introduzca valor numérico.",
+																	file : "Tipo de archivo no válido."
+
+																}
+															});
+
+										});
+
+					});
 </script>
 
 
@@ -76,6 +96,9 @@ $(document).ready(function () {
 		pageContext.setAttribute("producto", producto);
 
 		Usuarios usuario = (Usuarios) datos.get(Usuarios.class, user);
+
+		ArrayList<Categorias> arrayCategorias = (ArrayList<Categorias>) datos.createQuery("from Categorias").list();
+		pageContext.setAttribute("arraycategorias", arrayCategorias);
 
 		if (usuario.getRol().equals("Administrador")) {
 	%>
@@ -101,37 +124,16 @@ $(document).ready(function () {
 				</a></li>
 				<li class="nav-item active"><a class="nav-link"
 					href="/CANARYWHEY/Servlet?action=Productos">Productos</a></li>
-				<li class="nav-item"><a class="nav-link"
-					href="/CANARYWHEY/Servlet?action=carrito">Carrito</a></li>
+				<li class="nav-item "><a class="nav-link"
+					href="/CANARYWHEY/Servlet?action=usuarios">Usuarios</a></li>
 			</ul>
 		</div>
 	</div>
 	</nav> </header>
+	
 
 
-	<!-- Sidebar -->
-	<div id="barraizquierda">
-		<h2 style="text-align: center;">
-			<a href="/CANARYWHEY/Servlet?action=Productos"> CATEGORÍAS</a>
-		</h2>
-		<ul>
-			<%
-				ArrayList<Categorias> arrayCategorias = (ArrayList<Categorias>) datos.createQuery("from Categorias")
-							.list();
-					pageContext.setAttribute("arraycategorias", arrayCategorias);
-			%>
-
-			<c:forEach var="categorias" items="${arraycategorias}">
-				<li><a
-					href="/CANARYWHEY/Servlet?action=seleccionCategoria&id=${categorias.codigoCategoria}">
-						${categorias.nombre} </a></li>
-
-			</c:forEach>
-
-		</ul>
-	</div>
-
-	<div id="table" class="table-editable"
+	<div id="table" style="margin-left: 0; width:100%" class="table-editable"
 		style="margin-left: 15%; width: 100%">
 		<form action="Servlet?action=modificarProductos&proId=<%=idProducto%>"
 			method="post" enctype="multipart/form-data" id="formulario">
@@ -194,7 +196,9 @@ $(document).ready(function () {
 					<tr>
 						<th scope="row">5</th>
 						<td>Foto:</td>
-						<td><input type="file" name="file" id="examinar" src="imgsProductos/<%=producto.getCodigoProducto()%>.jpg" accept="image/*" /></td>
+						<td><input type="file" name="file" id="examinar"
+							src="imgsProductos/<%=producto.getCodigoProducto()%>.jpg"
+							accept="image/*" /></td>
 					</tr>
 
 
@@ -202,11 +206,12 @@ $(document).ready(function () {
 				</tbody>
 			</table>
 			<button style="margin-left: 30%; margin-bottom: 1.5%;"
-				name="guardarCambios" type="submit" id="btnGuardar"class="btn btn-primary">Guardar
-				cambios</button>
+				name="guardarCambios" type="submit" id="btnGuardar"
+				class="btn btn-primary">Guardar cambios</button>
 			<button type="submit" style="margin-left: 5%; margin-bottom: 1.5%"
-				name="volver" onclick="window.location.href='/CANARYWHEY/Servlet?action=Productos';"
-				class="btn btn-primary" >Volver</button>
+				name="volver"
+				onclick="window.location.href='/CANARYWHEY/Servlet?action=Productos';"
+				class="btn btn-primary">Volver</button>
 
 
 
