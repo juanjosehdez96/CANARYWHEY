@@ -26,7 +26,7 @@
 										function() {
 
 											// name validation
-											var nameregex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/i;
+											var nameregex =  /^[a-z\d_]{2,15}$/i;
 
 											$.validator
 													.addMethod(
@@ -167,11 +167,9 @@
 						<td>Unidades disponibles:</td>
 						<td><input type="text" name="stock"
 							value="<%=producto.getStock()%>" /></td>
-
 					</tr>
 
 					<tr>
-
 						<th scope="row">3</th>
 						<td>Categoría a la que pertenece:</td>
 						<td><select name="nombreCategoria">

@@ -26,6 +26,8 @@ import org.hibernate.Session;
 
 import modelo.Categorias;
 import modelo.DetallesPedido;
+import modelo.EnviarCorreo;
+import modelo.EnviarEmail;
 import modelo.HibernateUtil;
 import modelo.ListarPedidos;
 import modelo.Pedidos;
@@ -57,7 +59,14 @@ public class Servlet extends HttpServlet {
 		String base = "/jsp/";
 		String url = base + "bienvenida.jsp";
 		String action = request.getParameter("action");
+
 		HttpSession atrsesion = request.getSession();
+		String user = (String) atrsesion.getAttribute("nombreDeUsuario");
+		Usuarios usuario = null;
+		if (user != null) {
+			Session session = HibernateUtil.getSessionFactory().openSession();
+			usuario = (Usuarios) session.get(Usuarios.class, user);
+		}
 
 		if (atrsesion.getAttribute("nombreDeUsuario") != null) {
 			url = base + "bienvenidaLogueado.jsp";
@@ -69,7 +78,12 @@ public class Servlet extends HttpServlet {
 				url = base + "acceder.jsp";
 				break;
 			case "Registro":
-				añadirUsuarios(request);
+				try {
+					añadirUsuarios(request);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				url = base + "bienvenidaLogueado.jsp";
 				break;
 			case "InicioSesion":
@@ -153,9 +167,6 @@ public class Servlet extends HttpServlet {
 				}
 
 			case "addProductos":
-				String user = (String) atrsesion.getAttribute("nombreDeUsuario");
-				Session session = HibernateUtil.getSessionFactory().openSession();
-				Usuarios usuario = (Usuarios) session.get(Usuarios.class, user);
 
 				if (usuario.getRol().equals("Administrador")) {
 					if (request.getParameter("volver") != null) {
@@ -179,11 +190,8 @@ public class Servlet extends HttpServlet {
 				}
 
 			case "addCategorias":
-				String user1 = (String) atrsesion.getAttribute("nombreDeUsuario");
-				Session session1 = HibernateUtil.getSessionFactory().openSession();
-				Usuarios usuario1 = (Usuarios) session1.get(Usuarios.class, user1);
 
-				if (usuario1.getRol().equals("Administrador")) {
+				if (usuario.getRol().equals("Administrador")) {
 					if (request.getParameter("volver") != null) {
 						url = base + "productos.jsp";
 						break;
@@ -227,14 +235,19 @@ public class Servlet extends HttpServlet {
 					}
 				}
 			case "carrito":
-				if (request.getParameter("actualizar") != null) {
-					actualizarCarrito(request);
-					url = base + "carrito.jsp";
-					break;
-				}
-				if (request.getParameter("borrar") != null) {
-					borrarProductosCarrito(request);
-					url = base + "carrito.jsp";
+				if (usuario.getRol().equals("Cliente")) {
+					if (request.getParameter("actualizar") != null) {
+						actualizarCarrito(request);
+						url = base + "carrito.jsp";
+						break;
+					}
+					if (request.getParameter("borrar") != null) {
+						borrarProductosCarrito(request);
+						url = base + "carrito.jsp";
+						break;
+					}
+				} else {
+					url = base + "bienvenidaLogueado.jsp";
 					break;
 				}
 
@@ -242,35 +255,45 @@ public class Servlet extends HttpServlet {
 				break;
 
 			case "Checkout":
-				if (request.getParameter("comprar") != null) {
-					if (checkout(request)) {
-						request.setAttribute("checkout", "La compra se ha realizado con éxito");
-						atrsesion.setAttribute("carrito", null);
-						url = base + "checkout.jsp";
-					} else {
-						request.setAttribute("checkout", "Error al realizar la compra");
-					}
+				if (usuario.getRol().equals("Cliente")) {
+					if (request.getParameter("comprar") != null) {
+						if (checkout(request)) {
+							request.setAttribute("checkout", "La compra se ha realizado con éxito");
+							atrsesion.setAttribute("carrito", null);
+							url = base + "checkout.jsp";
+						} else {
+							request.setAttribute("checkout", "Error al realizar la compra");
+						}
 
-				} else {
-					url = base + "checkout.jsp";
+					} else {
+						url = base + "checkout.jsp";
+					}
 				}
 				break;
 
 			case "pedidos":
-				if (mostrarPedidos(request)) {
-					mostrarPedidos(request);
-					url = base + "pedidos.jsp";
+				if (usuario.getRol().equals("Cliente")) {
+					if (mostrarPedidos(request)) {
+						mostrarPedidos(request);
+						url = base + "pedidos.jsp";
+					} else {
+						url = base + "pedidos.jsp";
+					}
 				} else {
-					url = base + "pedidos.jsp";
+					url = base + "bienvenidaLogueado.jsp";
 				}
 				break;
 
 			case "usuarios":
-				if(request.getParameter("borrarUsuario") != null) {
-					eliminarUsuario(request);
+				if (usuario.getRol().equals("Administrador")) {
+					if (request.getParameter("borrarUsuario") != null) {
+						eliminarUsuario(request);
+						url = base + "usuarios.jsp";
+					}
 					url = base + "usuarios.jsp";
+				} else {
+					url = base + "bienvenidaLogueado.jsp";
 				}
-				url = base + "usuarios.jsp";
 				break;
 
 			}
@@ -280,7 +303,7 @@ public class Servlet extends HttpServlet {
 
 	}
 
-	public void añadirUsuarios(HttpServletRequest request) {
+	public void añadirUsuarios(HttpServletRequest request) throws Exception {
 
 		String rol = request.getParameter("rol");
 		String nombre = request.getParameter("nombre");
@@ -303,6 +326,7 @@ public class Servlet extends HttpServlet {
 		session.save(usuario); // <|--- Aqui guardamos el objeto en la base de datos.
 
 		session.getTransaction().commit();
+		
 		session.close();
 
 	}
@@ -679,7 +703,6 @@ public class Servlet extends HttpServlet {
 	public void eliminarUsuario(HttpServletRequest request) {
 
 		String user = request.getParameter("borrarUsuario");
-		System.out.println(user);
 
 		Session session = HibernateUtil.getSessionFactory().openSession();
 

@@ -152,24 +152,18 @@
 					</tr>
 					<tr>
 						<th scope="row">4</th>
-						<td>Contraseña:</td>
-						<td><%=usuario.getContraseña()%></td>
-
-					</tr>
-					<tr>
-						<th scope="row">5</th>
 						<td>Correo electrónico:</td>
 						<td><%=usuario.getEmail()%></td>
 
 					</tr>
 					<tr>
-						<th scope="row">6</th>
+						<th scope="row">5</th>
 						<td>Fecha de nacimiento:</td>
 						<td><%=usuario.getFechaNacimiento()%></td>
 
 					</tr>
 					<tr>
-						<th scope="row">7</th>
+						<th scope="row">6</th>
 						<td>Tipo de cuenta:</td>
 						<td><%=usuario.getRol()%></td>
 					</tr>

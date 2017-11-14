@@ -41,7 +41,8 @@ $('.tab a').on('click', function(e) {
 });
 
 $("#datepicker").datepicker({
-	format : 'dd-mm-yyyy',
+	format : 'dd-mm-yyyy'
+       
 
 });
 

@@ -18,13 +18,11 @@
 
 <style>
 #tabla {
-	margin-top: 7%;
-	width: 30%;
+	width: 96%;
 	margin-left: 2%;
-	background-color: #2c3e50;
+	background-color: #1a1d1f;
 	float: left;
-	margin-bottom: 6%;	
-	
+	margin-bottom: 6%;
 }
 
 #tabla tr {
@@ -34,7 +32,7 @@
 
 #tabla th {
 	text-align: center;
-	color:white;
+	color: white;
 }
 </style>
 
@@ -65,7 +63,7 @@
 			}
 	%>
 
-	<header> <!-- Navigation --> <nav
+	<header style="margin-bottom: 7%"> <!-- Navigation --> <nav
 		class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
 	<div class="container">
 		<a class="navbar-brand" href="/CANARYWHEY/Servlet">BIENVENIDO: <%=user.toUpperCase()%></a>
@@ -127,6 +125,8 @@
 
 		if (hashPedidos != null) {
 
+			int cont = 0;
+
 			Set<Integer> claves = hashPedidos.keySet();
 
 			for (Integer clave : claves) {
@@ -138,7 +138,8 @@
 			<tr>
 				<th colspan="3"><h3>
 						Pedido número
-						<%=hashPedidos.get(clave).getDetalles().get(clave - 1).getCodigoPedido()%></h3></th>
+						<%=hashPedidos.get(clave).getDetalles().get(0).getCodigoPedido()%></h3></th>
+
 
 			</tr>
 		</thead>
@@ -152,6 +153,7 @@
 
 			<%
 				int precioTotal = 0;
+
 						for (int i = 0; i < hashPedidos.get(clave).getDetalles().size(); i++) {
 			%>
 			<tr>
@@ -170,11 +172,15 @@
 
 			<tr>
 				<th>Fecha pedido:</th>
-				<th colspan="3" style="padding-top: 3%"><%=hashPedidos.get(clave).getPedidos().get(clave - 1).getFechaPedido()%></th>
+				<th colspan="3"><%=hashPedidos.get(clave).getPedidos().get(cont).getFechaPedido()%></th>
+			</tr>
+			<tr>
+				<th>Hora Pedido:</th>
+				<th colspan="3"><%=hashPedidos.get(clave).getPedidos().get(cont).getHoraPedido()%></th>
 			</tr>
 			<tr>
 				<th>Precio Total:</th>
-				<th colspan="3" style="padding-top: 3%"><%=precioTotal%>&euro;</th>
+				<th colspan="3""><%=precioTotal%>&euro;</th>
 			</tr>
 
 
@@ -184,7 +190,9 @@
 
 
 	<%
-		}
+		cont++;
+
+			}
 		} else {
 	%>
 
@@ -194,12 +202,9 @@
 	</div>
 
 
-
 	<%
 		}
 	%>
-
-
 
 
 	<footer>

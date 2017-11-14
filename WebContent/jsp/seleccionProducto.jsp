@@ -212,11 +212,17 @@
 			<form action="Servlet?action=añadirCarrito&proId=<%=idProducto%>"
 				method="post" name="form">
 				<div id="botonesProductos">
+
+					<%
+						Usuarios usuario = (Usuarios) datos.get(Usuarios.class, user);
+								if (usuario.getRol().equals("Cliente")) {
+					%>
 					<input type="submit" class="btn btn-primary"
 						value="Añadir al carro" id="btnCarrito" name="btnCarrito" />
 
 					<%
-						Usuarios usuario = (Usuarios) datos.get(Usuarios.class, user);
+						}
+
 								if (usuario.getRol().equals("Administrador")) {
 					%>
 					<input type="hidden" name="btnEliminar" /> <input
